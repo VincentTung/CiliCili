@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.funvideo.db.dao.RecordDao">
+    <resultMap id="BaseResultMap" type="com.vincent.funvideo.db.pojo.Record">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="uid" jdbcType="INTEGER" property="uid"/>
+        <result column="vid" jdbcType="INTEGER" property="vid"/>
+        <result column="like" jdbcType="INTEGER" property="like"/>
+        <result column="collect" jdbcType="INTEGER" property="collect"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , `uid`, vid, `like`, `collect`
+    </sql>
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.vincent.funvideo.db.pojo.Record"
+            useGeneratedKeys="true">
+        insert into record (`uid`, vid, `like`,
+                            `collect`)
+        values (#{uid,jdbcType=INTEGER}, #{vid,jdbcType=INTEGER}, #{like,jdbcType=INTEGER},
+                #{collect,jdbcType=INTEGER})
+    </insert>
+
+    <update id="updateView">
+        UPDATE record
+        SET `view` = `view` + 1
+        WHERE `uid` = #{uid}
+          AND `vid` = #{vid};
+    </update>
+    <select id="searchByVid" resultType="com.vincent.funvideo.db.pojo.Record" parameterType="HashMap">
+        SELECT id, `uid`, vid, `like`, `collect`
+        FROM record
+        WHERE vid = #{vid}
+          AND `uid` = #{uid};
+    </select>
+    <update id="updateLike" parameterType="HashMap">
+        UPDATE record
+        <set>
+
+            <if test="like != null">
+                `like` = #{like,jdbcType=INTEGER},
+            </if>
+
+        </set>
+        WHERE vid = #{vid} AND `uid`= #{uid};
+    </update>
+
+    <update id="updateCollect" parameterType="HashMap">
+        update record
+        <set>
+
+            <if test="collect != null">
+                `collect` = #{collect},
+            </if>
+
+        </set>
+        WHERE vid = #{vid} AND `uid`= #{uid};
+    </update>
+
+    <select id="getCollectList" parameterType="int" resultType="HashMap">
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.name,
+               u.face,
+               u.fans
+        FROM record r
+                 RIGHT JOIN video v ON r.vid = v.id
+                 LEFT JOIN `user` u ON  v.owner = u.id
+        WHERE r.`uid` = #{uid}
+          AND r.`collect` = 1
+
+    </select>
+
+
+    <select id="getLikeList" parameterType="int" resultType="HashMap">
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.name,
+               u.face,
+               u.fans
+        FROM record r
+                 RIGHT JOIN video v ON r.vid = v.id
+                 RIGHT JOIN user u ON v.owner = u.id
+        WHERE r.`uid` = #{uid}
+          AND r.`like` = 1
+
+    </select>
+
+
+    <select id="getViewList" parameterType="int" resultType="HashMap">
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.`owner`,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.name,
+               u.face,
+               u.fans
+        FROM record r
+                 RIGHT JOIN video v ON r.vid = v.id
+                 RIGHT JOIN user u ON v.owner = u.id
+        WHERE r.`uid` = #{uid}
+
+
+    </select>
+
+
+    <select id="isVideoLike" parameterType="HashMap" resultType="Integer">
+        SELECT id
+        FROM record
+        WHERE `uid` = #{uid} AND vid =  #{id}
+          AND `like` = 1
+    </select>
+    <select id="isVideoCollect" parameterType="HashMap" resultType="Integer">
+        SELECT id
+        FROM record
+        WHERE `uid` = #{uid} AND vid =  #{id}
+          AND `collect` = 1
+    </select>
+</mapper>

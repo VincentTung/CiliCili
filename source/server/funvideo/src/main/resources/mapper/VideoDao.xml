@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.funvideo.db.dao.VideoDao">
+    <resultMap id="BaseResultMap" type="com.vincent.funvideo.db.pojo.Video">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="vid" jdbcType="VARCHAR" property="vid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="tname" jdbcType="VARCHAR" property="tname"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="cover" jdbcType="VARCHAR" property="cover"/>
+        <result column="pubdate" jdbcType="INTEGER" property="pubdate"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="view" jdbcType="INTEGER" property="view"/>
+        <result column="duration" jdbcType="INTEGER" property="duration"/>
+        <result column="owner" jdbcType="VARCHAR" property="owner"/>
+        <result column="reply" jdbcType="INTEGER" property="reply"/>
+        <result column="favorite" jdbcType="INTEGER" property="favorite"/>
+        <result column="like" jdbcType="INTEGER" property="like"/>
+        <result column="coin" jdbcType="INTEGER" property="coin"/>
+        <result column="share" jdbcType="INTEGER" property="share"/>
+        <result column="createTime" jdbcType="VARCHAR" property="createtime"/>
+        <result column="size" jdbcType="INTEGER" property="size"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, vid, title, tname, url, cover, pubdate, `desc`, `view`, duration, `owner`, reply,
+    favorite, `like`, coin, `share`, createTime, `size`
+    </sql>
+    <select id="searchById" parameterType="java.lang.Integer" resultType="HashMap">
+        SELECT v.id,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+        WHERE v.id = #{id}
+    </select>
+
+
+    <select id="searchByVid" parameterType="String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where vid = #{vid}
+    </select>
+
+    <select id="searchByCategory" parameterType="HashMap" resultType="HashMap">
+
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+        WHERE v.tname = #{category} LIMIT #{start}
+            , #{length}
+    </select>
+
+
+    <select id="searchHotRank" parameterType="HashMap" resultType="HashMap">
+
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+        ORDER BY v.`view` DESC
+            LIMIT #{start}, #{length}
+    </select>
+    <select id="searchNewRank" parameterType="HashMap" resultType="HashMap">
+
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+        ORDER BY v.pubdate
+            LIMIT #{start}, #{length}
+    </select>
+    <select id="searchCollectRank" parameterType="HashMap" resultType="HashMap">
+        SELECT v.id
+                ,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+        ORDER BY v.favorite DESC
+            LIMIT #{start}, #{length}
+    </select>
+
+    <select id="getRecommend" resultType="HashMap" parameterType="HashMap">
+
+        SELECT v.id,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+            LIMIT #{start}, #{length}
+    </select>
+</mapper>

@@ -1,0 +1,61 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    threads:
+      max: 200
+      min-spare: 30
+    connection-timeout: 5000ms
+  port: 998
+  servlet:
+    context-path: /funvideo-api
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/video?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+      username: yourcount
+      password: yourpwd
+      initial-size: 8
+      max-active: 16
+      min-idle: 8
+      max-wait: 60000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+  redis:
+    database: 0
+    host: localhost
+    port: yourport
+    password: yourpwd
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+
+
+mybatis:
+    mapper-locations: classpath*:mapper/*.xml
+    type-aliases-package: com.vincent.video.db.pojo
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      map-underscore-to-camel-case: true
+logging:
+    level:
+      root: info
+      com.vincent.video.db.dao: warn
+    pattern:
+      console: "%d{HH:mm:ss}  %-5level  %msg%n"
+video:
+  jwt:
+    #密钥
+    secret: bac564321
+    #令牌过期时间（天）
+    expire:  11
+    #令牌缓存时间（天数）
+    cache-expire: 22
+    #apikey
+    apikey: youapikey
