@@ -2,7 +2,7 @@
 ![图标](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/cilicili_icon.png)
 ## 项目介绍
 
-#### 西哩西哩(CiliCili)是一款视频App，项目采用 SpringBoot+Flutter 开发，项目加入常见的企业级应用所涉及到的技术点，例如 Redis、JWT、Shiro 等。前端使用Flutter开发。
+#### 嘻哩嘻哩(CiliCili)是一款视频App，项目采用 SpringBoot+Flutter 开发，项目加入常见的企业级应用所涉及到的技术点，例如 Redis、JWT、Shiro 等。前端使用Flutter开发。
 #### Just For Fun。
 
 
