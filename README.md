@@ -37,5 +37,9 @@
 ![模式设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG101.jpeg)
 ![播放设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG102.jpeg)
 
+### 图标设计
+
+Morgan
+
 
 
