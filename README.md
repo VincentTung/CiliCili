@@ -28,11 +28,11 @@
 
 ### 项目效果图
 
-![首页](https://github.com/VincentTung/CiliCili/blob/master/art/WechatIMG76.jpeg)
-![排行](https://github.com/VincentTung/CiliCili/blob/master/art/WechatIMG74.jpeg)
-![收藏](https://github.com/VincentTung/CiliCili/blob/master/art/WechatIMG73.jpeg)
+![首页](https://github.com/VincentTung/CiliCili/blob/main/art/WechatIMG76.jpeg)
+![排行](https://github.com/VincentTung/CiliCili/blob/main/art/WechatIMG74.jpeg)
+![收藏](https://github.com/VincentTung/CiliCili/blob/main/art/WechatIMG73.jpeg)
 
-![我的](https://github.com/VincentTung/CiliCili/blob/master/art/WechatIMG77.jpeg)
+![我的](https://github.com/VincentTung/CiliCili/blob/main/art/WechatIMG77.jpeg)
 ![详情页](https://github.com/VincentTung/CiliCili/blob/master/art/WechatIMG78.jpeg)
 ![模式设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG101.jpeg)
 ![播放设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG102.jpeg)
