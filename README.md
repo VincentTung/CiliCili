@@ -27,7 +27,7 @@
 ```
 
 ### 项目效果图
-![首页](https:/raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG76.jpeg)
+![首页](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG76.jpeg)
 ![排行](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG74.jpeg)
 ![收藏](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG73.jpeg)
 
