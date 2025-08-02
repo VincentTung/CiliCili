@@ -29,7 +29,7 @@
 1. Flutter
 Flutter使用Get作为状态管理
 2. Android Native
-使用Hilt+androidX+Retrofit+Glide
+使用Hilt+androidX+Retrofit+Glide+composeUI+MVVM
 ```
 
 ### 项目效果图
