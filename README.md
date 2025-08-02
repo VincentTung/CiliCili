@@ -28,9 +28,9 @@
 
 ```text
 1. Flutter
-Flutter使用Get作为状态管理
+使用Get+lottie+dio+video_player+json_anatation
 2. Android Native
-使用Hilt+androidX+Retrofit+Glide+composeUI+MVVM
+使用Hilt+androidX+Retrofit+Glide+composeUI+MVVM+lottie
 ```
 
 ### 项目效果图
