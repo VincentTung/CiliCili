@@ -32,9 +32,9 @@
 ![收藏](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG73.jpeg)
 
 ![我的](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG77.jpeg)
-![详情页](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/WechatIMG78.jpeg)
-![模式设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG101.jpeg)
-![播放设置](https://github-1304799125.cos.ap-beijing.myqcloud.com/video/WechatIMG102.jpeg)
+![详情页](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/dettail.jpeg)
+![模式设置](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/theme_set.jpg)
+![播放设置](https://raw.githubusercontent.com/VincentTung/CiliCili/main/art/play_set.png)
 
 ### 图标设计
 感谢 Morgan
