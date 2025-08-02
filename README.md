@@ -4,6 +4,7 @@
 
 #### 嘻哩嘻哩(CiliCili)是一款视频App，项目采用 SpringBoot+Flutter/Android 开发，项目加入常见的企业级应用所涉及到的技术点，例如 Redis、JWT、Shiro 等。前端使用Flutter/Android Native开发。
 2025/06 适配Flutter 3.32.4 
+
 2025/07 增加 Android Native客户端
 
 #### Just For Fun。
