@@ -25,7 +25,12 @@ public interface RecordDao {
 
     int updateView(HashMap params);
 
-    Integer isVideoLike(HashMap params);
 
+    int coinVideo(HashMap params);
+
+    Integer isVideoLike(HashMap params);
+    Integer getLikeSate(HashMap params);
     Integer isVideoCollect(HashMap params);
+
+    List<HashMap> getCoinList(int uid);
 }

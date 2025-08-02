@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/util/color.dart';
 
 class LoginEffect extends StatefulWidget {
   final bool eyeClose;
 
-  const LoginEffect(this.eyeClose,{Key key}) : super(key: key);
+  const LoginEffect(this.eyeClose,{Key? key}) : super(key: key);
 
   @override
   _LoginEffectState createState() => _LoginEffectState();
@@ -16,16 +17,17 @@ class _LoginEffectState extends State<LoginEffect> {
       padding: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
           color: Colors.grey[100],
-          border: Border(bottom: BorderSide(color: Colors.grey[300]))),
+          border: Border(bottom: BorderSide(color: Colors.grey[300] ?? Colors.grey))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _image(true),
-          Image(
-            height: 90,
-            width: 90,
-            image: AssetImage('images/logo.png'),
-          ),
+          Text("CiliCili",style: TextStyle(color: primary,fontWeight: FontWeight.bold,fontSize: 25),),
+          // Image(
+          //   height: 90,
+          //   width: 90,
+          //   image: AssetImage('images/logo.png'),
+          // ),
           _image(false),
         ],
       ),

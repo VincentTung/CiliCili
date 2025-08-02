@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/color.dart';
+import 'package:flutter_bilibili/util/color.dart';
 
 class LoginButton extends StatelessWidget {
 
@@ -7,7 +7,7 @@ class LoginButton extends StatelessWidget {
   final bool enable;
   final VoidCallback onPressed;
 
-  const LoginButton(this.title,  this.enable,{Key key, this.onPressed}) : super(key: key);
+  const LoginButton(this.title,  this.enable,{Key? key, required this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(

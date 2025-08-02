@@ -13,7 +13,7 @@ class UnCollectRequest  extends BaseRequest {
 
   @override
   String path() {
-    return 'funvideo-api/action/collect';
+    return 'api/action/collect';
   }
 
 }

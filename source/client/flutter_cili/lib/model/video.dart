@@ -1,5 +1,4 @@
-class Video{
-
+class Video {
   int id;
   String vid;
   String title;
@@ -20,72 +19,81 @@ class Video{
   String name;
   String face;
   int fans;
+  int uper;
+  bool isFocus;
 
-  Video(
-      {this.id,
-        this.vid,
-        this.title,
-        this.tname,
-        this.url,
-        this.cover,
-        this.pubdate,
-        this.desc,
-        this.view,
-        this.duration,
-        this.reply,
-        this.favorite,
-        this.like,
-        this.coin,
-        this.share,
-        this.createTime,
-        this.size,this.name,this.fans,this.face});
+  Video({
+    required this.id,
+    required this.vid,
+    required this.title,
+    required this.tname,
+    required this.url,
+    required this.cover,
+    required this.pubdate,
+    required this.desc,
+    required this.view,
+    required this.duration,
+    required this.reply,
+    required this.favorite,
+    required this.like,
+    required this.coin,
+    required this.share,
+    required this.createTime,
+    required this.size,
+    required this.name,
+    required this.face,
+    required this.fans,
+    required this.uper,
+    required this.isFocus,
+  });
 
-  Video.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    vid = json['vid'];
-    title = json['title'];
-    tname = json['tname'];
-    url = json['url'];
-    cover = json['cover'];
-    pubdate = json['pubdate'];
-    desc = json['desc'];
-    view = json['view'];
-    duration = json['duration'];
-    name = json['name'];
-    fans = json['fans'];
-    face = json['face'];
-    reply = json['reply'];
-    favorite = json['favorite'];
-    like = json['like'];
-    coin = json['coin'];
-    share = json['share'];
-    createTime = json['createTime'];
-    size = json['size'];
-  }
+  factory Video.fromJson(Map<String, dynamic> json) => Video(
+    id: json['id'] ?? 0,
+    vid: json['vid'] ?? '',
+    title: json['title'] ?? '',
+    tname: json['tname'] ?? '',
+    url: json['url'] ?? '',
+    cover: json['cover'] ?? '',
+    pubdate: json['pubdate'] ?? 0,
+    desc: json['desc'] ?? '',
+    view: json['view'] ?? 0,
+    duration: json['duration'] ?? 0,
+    reply: json['reply'] ?? 0,
+    favorite: json['favorite'] ?? 0,
+    like: json['like'] ?? 0,
+    coin: json['coin'] ?? 0,
+    share: json['share'] ?? 0,
+    createTime: json['createTime'] ?? '',
+    size: json['size'] ?? 0,
+    name: json['name'] ?? '',
+    face: json['face'] ?? '',
+    fans: json['fans'] ?? 0,
+    uper: int.parse((json['uper'] ?? '0')),
+    isFocus: json['isFocus'] ?? false,
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['vid'] = this.vid;
-    data['title'] = this.title;
-    data['tname'] = this.tname;
-    data['url'] = this.url;
-    data['cover'] = this.cover;
-    data['pubdate'] = this.pubdate;
-    data['desc'] = this.desc;
-    data['view'] = this.view;
-    data['duration'] = this.duration;
-
-    data['reply'] = this.reply;
-    data['favorite'] = this.favorite;
-    data['like'] = this.like;
-    data['coin'] = this.coin;
-    data['share'] = this.share;
-    data['createTime'] = this.createTime;
-    data['size'] = this.size;
-    data['name'] = this.name;
-    data['face']= this.face;
-    data['fans'] =this.fans;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'vid': vid,
+    'title': title,
+    'tname': tname,
+    'url': url,
+    'cover': cover,
+    'pubdate': pubdate,
+    'desc': desc,
+    'view': view,
+    'duration': duration,
+    'reply': reply,
+    'favorite': favorite,
+    'like': like,
+    'coin': coin,
+    'share': share,
+    'createTime': createTime,
+    'size': size,
+    'name': name,
+    'face': face,
+    'fans': fans,
+    'uper': uper,
+    'isFocus': isFocus,
+  };
 }

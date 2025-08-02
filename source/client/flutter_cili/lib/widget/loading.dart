@@ -6,7 +6,7 @@ class Loading extends StatelessWidget {
   final bool isLoading;
   final bool cover;
 
-  const Loading({Key key, this.isLoading, this.cover = false, this.child})
+  const Loading({Key? key, required this.isLoading, this.cover = false, required this.child})
       : super(key: key);
 
   Widget get _loadingView {

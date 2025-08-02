@@ -26,5 +26,10 @@ public class User implements Serializable {
      */
     private Long fans;
 
+    /**
+     * 金币
+     */
+    private  Integer coin;
+
     private static final long serialVersionUID = 1L;
 }

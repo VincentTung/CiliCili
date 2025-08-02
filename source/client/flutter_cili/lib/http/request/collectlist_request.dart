@@ -1,4 +1,4 @@
-import 'package:flutter_cili/http/request/base_request.dart';
+import 'package:flutter_bilibili/http/request/base_request.dart';
 
 class CollectListRequest extends BaseRequest {
   @override
@@ -13,7 +13,7 @@ class CollectListRequest extends BaseRequest {
 
   @override
   String path() {
-    return 'funvideo-api/action/collect';
+    return 'api/action/collect';
   }
 
 }

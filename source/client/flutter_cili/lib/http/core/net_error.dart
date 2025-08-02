@@ -7,11 +7,11 @@ class NetError implements Exception {
 }
 
 class NeedAuth extends NetError {
-  NeedAuth(String message, {int code: 403, dynamic data})
+  NeedAuth(String message, {int code = 403, dynamic data})
       : super(code, message, data: data);
 }
 
 class NeedLogin extends NetError {
-  NeedLogin({String message: '请先登录', int code: 401})
+  NeedLogin({String message = '请先登录', int code = 401})
       : super(code, message);
 }

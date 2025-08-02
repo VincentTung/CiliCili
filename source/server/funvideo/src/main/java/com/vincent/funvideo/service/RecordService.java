@@ -1,5 +1,6 @@
 package com.vincent.funvideo.service;
 
+import com.vincent.funvideo.db.pojo.Record;
 import org.apache.shiro.crypto.hash.Hash;
 
 import java.util.HashMap;
@@ -25,7 +26,23 @@ public interface RecordService {
 
     List<HashMap> getLikeList(int uid);
 
-    boolean isVideoLike(int uid, Integer id);
+    boolean isVideoLike(int uid, int id);
+    Integer getLikeState(int uid,int id);
+    boolean isVideoCollect(int uid, int id);
 
-    boolean isVideoCollect(int uid, Integer id);
+    Record searRecord(int uid, int id);
+
+    int  coinVideo(int uid, int vid);
+
+    List<HashMap> getCoinList(int uid);
+
+    List<HashMap> getFanList(int uid);
+
+    List<HashMap> getFocusList(int uid);
+
+    int focusUpper(int uid, int uper);
+
+    Integer getFocus(int uid,int uper);
+
+    int cancelFocusUper(int uid, int uper);
 }

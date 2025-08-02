@@ -1,27 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/format_util.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/widget/navigation_bar.dart';
-import 'package:flutter_statusbar_manager/flutter_statusbar_manager.dart';
+import 'package:flutter_bilibili/util/format_util.dart';
+import 'package:flutter_bilibili/util/theme_data.dart';
 
+import 'color.dart';
+  // Flutter 3 及以上推荐用 SystemChrome.setSystemUIOverlayStyle 实现
+import 'package:flutter/services.dart';
+/// 状态栏样式
+enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
 ///带缓存的image
-Widget cachedImage(String url, {double width, double height}) {
+Widget cachedImage(String url, {double? width, double? height, BoxFit? fit}) {
+  // logD('cover:$url');
   return CachedNetworkImage(
       height: height,
       width: width,
-      fit: BoxFit.cover,
+      fit: fit ?? BoxFit.cover,
       placeholder: (
-          BuildContext context,
-          String url,
-          ) =>
+        BuildContext context,
+        String url,
+      ) =>
           Container(color: Colors.grey[200]),
       errorWidget: (
-          BuildContext context,
-          String url,
-          dynamic error,
-          ) =>
+        BuildContext context,
+        String url,
+        dynamic error,
+      ) =>
           Icon(Icons.error),
       imageUrl: url);
 }
@@ -41,14 +45,24 @@ blackLinearGradient({bool fromTop = false}) {
       ]);
 }
 
-// ///修改状态栏
-void changeStatusBar(
-    {color: Colors.white, StatusStyle statusStyle: StatusStyle.DARK_CONTENT}) {
-  //沉浸式状态栏样式
-  FlutterStatusbarManager.setColor(color, animated: false);
-  FlutterStatusbarManager.setStyle(statusStyle == StatusStyle.DARK_CONTENT
-      ? StatusBarStyle.DARK_CONTENT
-      : StatusBarStyle.LIGHT_CONTENT);
+///修改状态栏
+void changeStatusBar({
+  Color color = Colors.white,
+  StatusStyle statusStyle = StatusStyle.DARK_CONTENT,
+}) async {
+  // 设置状态栏颜色
+
+
+  SystemUiOverlayStyle overlayStyle = SystemUiOverlayStyle(
+    statusBarColor: color,
+    statusBarIconBrightness: statusStyle == StatusStyle.LIGHT_CONTENT
+        ? Brightness.light
+        : Brightness.dark,
+    statusBarBrightness: statusStyle == StatusStyle.LIGHT_CONTENT
+        ? Brightness.dark
+        : Brightness.light,
+  );
+  SystemChrome.setSystemUIOverlayStyle(overlayStyle);
 }
 
 ///带文字的小图标
@@ -71,8 +85,8 @@ smallIconText(IconData iconData, var text) {
 }
 
 ///border线
-borderLine(BuildContext context, {bottom: true, top: false}) {
-  BorderSide borderSide = BorderSide(width: 0.5, color: Colors.grey[200]);
+borderLine(BuildContext context, {bool bottom = true, bool top = false}) {
+  BorderSide borderSide = BorderSide(width: 0.5, color: Colors.grey[200] ?? Colors.grey);
   return Border(
     bottom: bottom ? borderSide : BorderSide.none,
     top: top ? borderSide : BorderSide.none,
@@ -80,18 +94,46 @@ borderLine(BuildContext context, {bottom: true, top: false}) {
 }
 
 ///间距
-SizedBox VSpace({double height: 1, double width: 1}) {
+SizedBox VSpace({double height = 1, double width = 1}) {
   return SizedBox(height: height, width: width);
 }
 
 ///底部阴影
-BoxDecoration bottomBoxShadow() {
-  return BoxDecoration(color: Colors.white, boxShadow: [
+BoxDecoration bottomBoxShadow(bool isDark) {
+  return BoxDecoration(color: isDark ? Colors.black : Colors.white, boxShadow: [
     BoxShadow(
-        color: Colors.grey[100],
+        color: isDark?Colors.black:(Colors.grey[100] ?? Colors.grey),
         offset: Offset(0, 5), //xy轴偏移
         blurRadius: 5.0, //阴影模糊程度
         spreadRadius: 1 //阴影扩散程度
-    )
+        )
   ]);
+}
+
+Container buildSwitchSettingItem(
+    String title, String des, bool isOpen, ValueChanged<bool> callback,bool isDark) {
+
+  return Container(
+    padding: EdgeInsets.only(top: 10),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(color: getTextColor(isDark), fontSize: 14),
+            ),
+            Text(des, style: TextStyle(color: Colors.grey, fontSize: 12))
+          ],
+        ),
+        Switch(
+          value: isOpen,
+          onChanged: callback,
+          activeColor: primary,
+        )
+      ],
+    ),
+  );
 }

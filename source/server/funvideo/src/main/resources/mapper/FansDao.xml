@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.funvideo.db.dao.FansDao">
+
+
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.vincent.funvideo.db.pojo.Fans"
+            useGeneratedKeys="true">
+        insert into fans (`uid`, uper, `state`,
+                          `time`)
+        values (#{uid,jdbcType=INTEGER}, #{uper,jdbcType=INTEGER}, #{state,jdbcType=INTEGER},
+                now())
+    </insert>
+
+
+    <update id="updateFocus" parameterType="HashMap">
+        UPDATE fans
+        SET `state` = #{state}
+        WHERE uid = #{uid} AND uper =#{uper};
+    </update>
+    <select id="searchFocus" parameterType="HashMap" resultType="integer">
+        SELECT uid
+        FROM fans
+        WHERE uid = #{uid}
+          AND uper = #{uper} AND `state` =1;
+    </select>
+    <select id="searchFocusAnyState" parameterType="int" resultType="integer">
+        SELECT uid
+        FROM fans
+        WHERE uid = #{uid}
+          AND uper = #{uper}
+        LIMIT 1
+    </select>
+    <select id="getFansList" parameterType="int" resultType="HashMap">
+
+        SELECT u.id, u.name, u.fans, u.face, u.coin
+        FROM fans f
+                 LEFT JOIN `user` u ON f.uid = u.id
+
+        WHERE uper = #{uid}
+          AND `state` = 1;
+
+    </select>
+
+    <select id="getFocusList" parameterType="int" resultType="HashMap">
+
+        SELECT u.id, u.name, u.fans, u.face, u.coin
+        FROM fans f
+                 LEFT JOIN `user` u ON f.uper = u.id
+        WHERE uid = #{uid}
+          AND `state` = 1;
+
+    </select>
+
+</mapper>

@@ -32,6 +32,7 @@ public class Record implements Serializable {
     private Integer collect;
 
 
+    private Integer coin;
 
 
     private static final long serialVersionUID = 1L;

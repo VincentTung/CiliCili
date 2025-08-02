@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_cili/util/log_util.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
 
 abstract class BaseState<T extends StatefulWidget> extends State<T>{
   

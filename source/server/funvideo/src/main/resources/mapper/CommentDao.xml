@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.funvideo.db.dao.CommentDao">
+    <insert id="insertComment" parameterType="com.vincent.funvideo.db.pojo.Comment">
+        INSERT INTO comment (video_id, user_id, username, content, create_time, parent_id, avatar)
+        VALUES (#{videoId}, #{userId}, #{username}, #{content}, NOW(), #{parentId}, #{avatar})
+    </insert>
+
+    <select id="selectCommentsByVideoId" resultType="com.vincent.funvideo.db.pojo.Comment">
+        SELECT * FROM comment
+        WHERE video_id = #{videoId} AND parent_id IS NULL
+        ORDER BY create_time DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectReplies" resultType="com.vincent.funvideo.db.pojo.Comment">
+        SELECT * FROM comment
+        WHERE parent_id = #{parentId}
+        ORDER BY create_time ASC
+    </select>
+
+    <select id="countCommentsByVideoId" resultType="int">
+        SELECT COUNT(*) FROM comment
+        WHERE video_id = #{videoId} AND parent_id IS NULL
+    </select>
+</mapper> 

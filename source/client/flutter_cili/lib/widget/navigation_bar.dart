@@ -1,49 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/view_util.dart';
-
-enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
+import 'package:get/get.dart';
+import 'package:flutter_bilibili/controllers/theme_controller.dart';
+import 'package:flutter_bilibili/util/theme_data.dart';
 
 ///可自定义样式的沉浸式导航栏
-class NavigationBar extends StatefulWidget {
-  final StatusStyle statusStyle;
-  final Color color;
-  final double height;
+class NavigationBar extends StatelessWidget {
   final Widget child;
+  final double height;
+  final Color? color;
+  final double? elevation;
+  final bool? shadowColor;
 
-  const NavigationBar(
-      {Key key,
-      this.statusStyle = StatusStyle.DARK_CONTENT,
-      this.color = Colors.white,
-      this.height = 46,
-      this.child})
-      : super(key: key);
-
-  @override
-  _NavigationBarState createState() => _NavigationBarState();
-}
-
-class _NavigationBarState extends State<NavigationBar> {
-  @override
-  void initState() {
-    super.initState();
-    _statusBarInit();
-  }
+  const NavigationBar({
+    super.key,
+    required this.child,
+    this.height = 46,
+    this.color,
+    this.elevation,
+    this.shadowColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    //状态栏高度
-    var top = MediaQuery.of(context).padding.top;
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: top + widget.height,
-      child: widget.child,
-      padding: EdgeInsets.only(top: top),
-      decoration: BoxDecoration(color: widget.color),
+    return GetX<ThemeController>(
+      builder: (themeController) {
+        final isDark = themeController.isDarkMode(context);
+        return Container(
+          width: double.infinity,
+          height: height,
+          decoration: BoxDecoration(
+            color: color ?? getBackgroundColor(isDark),
+            boxShadow: shadowColor == true
+                ? [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: const Offset(0, 1),
+                      blurRadius: 2,
+                    ),
+                  ]
+                : null,
+          ),
+          child: child,
+        );
+      },
     );
-  }
-
-  void _statusBarInit() {
-    //沉浸式状态栏
-    changeStatusBar(color: widget.color, statusStyle: widget.statusStyle);
   }
 }

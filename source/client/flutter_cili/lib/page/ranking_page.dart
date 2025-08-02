@@ -1,70 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/page/ranking_tab_page.dart';
-import 'package:flutter_cili/util/view_util.dart';
-import 'package:flutter_cili/widget/navigation_bar.dart';
-import 'package:flutter_cili/widget/v_tab.dart';
+import 'package:flutter_bilibili/page/ranking_tab_page.dart';
+import 'package:flutter_bilibili/util/color.dart';
+import 'package:get/get.dart';
+import 'package:flutter_bilibili/controllers/theme_controller.dart';
+import 'package:flutter_bilibili/util/theme_data.dart';
 
+///排行榜页面
 class RankingPage extends StatefulWidget {
   @override
   _RankingPageState createState() => _RankingPageState();
 }
 
-class _RankingPageState extends State<RankingPage>
-    with TickerProviderStateMixin {
+class _RankingPageState extends State<RankingPage> with SingleTickerProviderStateMixin {
   static const TABS = [
     {"key": "hot", "name": "最热"},
     {"key": "new", "name": "最新"},
     {"key": "collect", "name": "收藏"}
   ];
-  TabController _controller;
+  late TabController controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: TABS.length, vsync: this);
+    controller = TabController(length: TABS.length, vsync: this);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          child: Column(
-        children: [_buildNavigationBar(), _buildTabView()],
-      )),
+    return GetX<ThemeController>(
+      builder: (themeController) {
+        final isDark = themeController.isDarkMode(context);
+        return Container(
+          decoration: BoxDecoration(color: getBackgroundColor(isDark)),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                '排行榜',
+                style: TextStyle(color: getTextColor(isDark)),
+              ),
+              iconTheme: IconThemeData(color: getTextColor(isDark)),
+            ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: getBackgroundColor(isDark),
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey[300]!, width: 0.5),
+                      ),
+                    ),
+                    child: TabBar(
+                      controller: controller,
+                      tabs: TABS.map((tab) => Tab(text: tab['name'])).toList(),
+                      labelColor: getTextColor(isDark),
+                      unselectedLabelColor: Colors.grey,
+                      indicatorColor: primary,
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: controller,
+                      children: TABS.map((tab) => RankingTabPage(sort: tab['key'] as String)).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
-  }
-
-  _buildNavigationBar() {
-    return NavigationBar(child: Container(
-      ///底部阴影
-      decoration: bottomBoxShadow(),
-      alignment: Alignment.center,
-      child: _tabBar(),
-    ),);
-  }
-
-  _buildTabView() {
-
-    return Flexible(child: TabBarView(
-      controller: _controller,
-      children: TABS.map((tab) => RankingTabPage(sort:tab['key'])).toList(),
-    ));
-  }
-
-
-
-  _tabBar() {
-    return VTab(
-        tabsItem: TABS.map<Widget>((tab) => Tab(text: tab['name'])).toList(),
-        fontSize: 16,
-        borderWidth: 3,
-        unSelectLabelColor: Colors.black54,
-        controller: _controller);
   }
 }

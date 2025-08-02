@@ -1,110 +1,93 @@
-
-import 'package:flutter_cili/model/video.dart';
+import 'package:flutter_bilibili/model/video.dart';
 
 ///
 class HomeData {
-  List<BannerData> bannerList;
-  List<Category> categoryList;
-  List<Video> videoList;
+  final List<BannerData> bannerList;
+  final List<Category> categoryList;
+  final List<Video> videoList;
 
-  HomeData({this.bannerList, this.categoryList, this.videoList});
+  HomeData({
+    required this.bannerList,
+    required this.categoryList,
+    required this.videoList,
+  });
 
-  HomeData.fromJson(Map<String, dynamic> json) {
-    if (json['bannerList'] != null) {
-      bannerList = new List<BannerData>.empty(growable: true);
-      json['bannerList'].forEach((v) {
-        bannerList.add(new BannerData.fromJson(v));
-      });
-    }
-    if (json['categoryList'] != null) {
-      categoryList = new List<Category>.empty(growable: true);
-      json['categoryList'].forEach((v) {
-        categoryList.add(new Category.fromJson(v));
-      });
-    }
-    if (json['videoList'] != null) {
-      videoList = new List<Video>.empty(growable: true);
-      json['videoList'].forEach((v) {
-        videoList.add(new Video.fromJson(v));
-      });
-    }
-  }
+  factory HomeData.fromJson(Map<String, dynamic> json) => HomeData(
+    bannerList: json['bannerList'] != null
+        ? List<BannerData>.from(json['bannerList'].map((v) => BannerData.fromJson(v)))
+        : <BannerData>[],
+    categoryList: json['categoryList'] != null
+        ? List<Category>.from(json['categoryList'].map((v) => Category.fromJson(v)))
+        : <Category>[],
+    videoList: json['videoList'] != null
+        ? List<Video>.from(json['videoList'].map((v) => Video.fromJson(v)))
+        : <Video>[],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.bannerList != null) {
-      data['bannerList'] = this.bannerList.map((v) => v.toJson()).toList();
-    }
-    if (this.categoryList != null) {
-      data['categoryList'] = this.categoryList.map((v) => v.toJson()).toList();
-    }
-    if (this.videoList != null) {
-      data['videoList'] = this.videoList.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'bannerList': bannerList.map((v) => v.toJson()).toList(),
+    'categoryList': categoryList.map((v) => v.toJson()).toList(),
+    'videoList': videoList.map((v) => v.toJson()).toList(),
+  };
 }
 
 class BannerData {
-  int id;
-  int sticky;
-  String type;
-  String title;
-  String subtitle;
-  String url;
-  String cover;
-  String createTime;
+  final int id;
+  final int sticky;
+  final String type;
+  final String title;
+  final String subtitle;
+  final String url;
+  final String cover;
+  final String createTime;
 
-  BannerData(
-      {this.id,
-      this.sticky,
-      this.type,
-      this.title,
-      this.subtitle,
-      this.url,
-      this.cover,
-      this.createTime});
+  BannerData({
+    required this.id,
+    required this.sticky,
+    required this.type,
+    required this.title,
+    required this.subtitle,
+    required this.url,
+    required this.cover,
+    required this.createTime,
+  });
 
-  BannerData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    sticky = json['sticky'];
-    type = json['type'];
-    title = json['title'];
-    subtitle = json['subtitle'];
-    url = json['url'];
-    cover = json['cover'];
-    createTime = json['createTime'];
-  }
+  factory BannerData.fromJson(Map<String, dynamic> json) => BannerData(
+    id: json['id'] ?? 0,
+    sticky: json['sticky'] ?? 0,
+    type: json['type'] ?? '',
+    title: json['title'] ?? '',
+    subtitle: json['subtitle'] ?? '',
+    url: json['url'] ?? '',
+    cover: json['cover'] ?? '',
+    createTime: json['createTime'] ?? '',
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['sticky'] = this.sticky;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['subtitle'] = this.subtitle;
-    data['url'] = this.url;
-    data['cover'] = this.cover;
-    data['createTime'] = this.createTime;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'sticky': sticky,
+    'type': type,
+    'title': title,
+    'subtitle': subtitle,
+    'url': url,
+    'cover': cover,
+    'createTime': createTime,
+  };
 }
 
 class Category {
-  String name;
-  int count;
+  final int id;
+  final String name;
 
-  Category({this.name, this.count});
+  Category({required this.id, required this.name});
 
-  Category.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    count = json['count'];
-  }
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    id: json['id'] ?? 0,
+    name: json['name'] ?? '',
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['count'] = this.count;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+  };
 }

@@ -14,7 +14,10 @@ public class LoginForm extends BaseForm{
     @NotNull
     private String username;
 
-    @ApiModelProperty("密码")
+    @ApiModelProperty("密码（已加密）")
     @NotNull
     private String pwd;
+    
+    @ApiModelProperty("加密类型：MD5/SHA256，默认为MD5")
+    private String encryptType = "MD5";
 }

@@ -54,4 +54,35 @@ public interface VideoDao {
 
 
     List<HashMap> getRecommend(HashMap params);
+
+
+    /**
+     * 点赞数量
+     * @param id
+     * @return
+     */
+    int plusLikeCount(int id);
+    int minusLikeCount(int id);
+
+    /**
+     * 投币数量
+     * @param id
+     * @return
+     */
+    int plusCoinCount(int id);
+    int minusCoinCount(int id);
+
+    /**
+     * 分享数量
+     * @param id
+     * @return
+     */
+    int plusCollectCount(int id);
+    int minusCollectCount(int id);
+
+    void coinVideo(int id);
+
+    void viewVideo(int id);
+
+    List<HashMap> searchVideoByWord(String keyword);
 }

@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/model/owner.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/util/color.dart';
-import 'package:flutter_cili/util/format_util.dart';
-import 'package:flutter_cili/util/log_util.dart';
+import 'package:flutter_bilibili/http/usecase/focus_case.dart';
+import 'package:flutter_bilibili/model/owner.dart';
+import 'package:flutter_bilibili/storage/cache_controller.dart';
+import 'package:flutter_bilibili/util/color.dart';
+import 'package:flutter_bilibili/util/format_util.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
 
-class VideoHeader extends StatelessWidget {
+class VideoHeader extends StatefulWidget {
   final Owner owner;
 
-  const VideoHeader({Key key, @required this.owner}) : super(key: key);
+  const VideoHeader({Key? key, required this.owner})
+      : super(key: key);
+
+  @override
+  _VideoHeaderState createState() => _VideoHeaderState();
+}
+
+class _VideoHeaderState extends State<VideoHeader> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +31,7 @@ class VideoHeader extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
-                  owner.face,
+                  widget.owner.face,
                   width: 30,
                   height: 30,
                 ),
@@ -32,14 +41,14 @@ class VideoHeader extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      owner.name,
+                      widget.owner.name,
                       style: TextStyle(
                           fontSize: 13,
                           color: primary,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${countFormat(owner.fans)}粉丝',
+                      '${countFormat(widget.owner.fans)}粉丝',
                       style: TextStyle(fontSize: 10, color: Colors.grey),
                     )
                   ],
@@ -47,20 +56,35 @@ class VideoHeader extends StatelessWidget {
               ),
             ],
           ),
-          MaterialButton(
-            onPressed: () {
+          Visibility(
 
-            },
-            color: primary,
-            height: 24,
-            minWidth: 50,
-            child: Text(
-              '关注',
-              style: TextStyle(color: Colors.white, fontSize: 13),
-            ),
-          )
+              visible: CacheController.getInstance().getInt("uid") == widget.owner.id,
+              child: MaterialButton(
+                onPressed: () {
+                  logD('关注');
+                  _focus(true);
+                },
+                color: primary,
+                height: 24,
+                minWidth: 50,
+                child: Text(
+                  widget.owner.isFocus ? '已关注' : '关注',
+                  style: TextStyle(color: Colors.white, fontSize: 13),
+                ),
+              )),
+
         ],
       ),
     );
+  }
+
+  void _focus(bool isFocus) async {
+    var result = await FocusCase.focus(widget.owner.id, !widget.owner.isFocus);
+    if (result["code"] == 200) {
+      widget.owner.isFocus = !widget.owner.isFocus;
+      setState(() {
+        widget.owner.isFocus = widget.owner.isFocus;
+      });
+    }
   }
 }

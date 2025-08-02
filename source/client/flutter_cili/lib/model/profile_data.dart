@@ -1,121 +1,99 @@
-
-
 import 'home_data.dart';
 
 class ProfileData {
-  String name;
-  String face;
-  int fans;
-  int collect;
-  int like;
-  int coin;
-  int view;
-  List<BannerData> bannerList;
-  List<Course> courseList;
-  List<Benefit> benefitList;
+  final String name;
+  final String face;
+  final int fans;
+  final int collect;
+  final int like;
+  final int coin;
+  final int view;
+  final List<BannerData> bannerList;
+  final List<Course> courseList;
+  final List<Benefit> benefitList;
 
-  ProfileData(
-      {this.name,
-      this.face,
-      this.fans,
-      this.collect,
-      this.like,
-      this.coin,
-      this.view,
-      this.bannerList,
-      this.courseList,
-      this.benefitList});
+  ProfileData({
+    required this.name,
+    required this.face,
+    required this.fans,
+    required this.collect,
+    required this.like,
+    required this.coin,
+    required this.view,
+    required this.bannerList,
+    required this.courseList,
+    required this.benefitList,
+  });
 
-  ProfileData.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    face = json['face'];
-    fans = json['fans'];
-    collect = json['collect'];
-    like = json['like'];
-    coin = json['coin'];
-    view = json['view'];
-    if (json['bannerList'] != null) {
-      bannerList = new List<BannerData>.empty(growable: true);
-      json['bannerList'].forEach((v) {
-        bannerList.add(new BannerData.fromJson(v));
-      });
-    }
-    if (json['courseList'] != null) {
-      courseList = new List<Course>();
-      json['courseList'].forEach((v) {
-        courseList.add(new Course.fromJson(v));
-      });
-    }
-    if (json['benefitList'] != null) {
-      benefitList = new List<Benefit>.empty(growable: true);
-      json['benefitList'].forEach((v) {
-        benefitList.add(new Benefit.fromJson(v));
-      });
-    }
-  }
+  factory ProfileData.fromJson(Map<String, dynamic> json) => ProfileData(
+    name: json['name'] ?? '',
+    face: json['face'] ?? '',
+    fans: json['fans'] ?? 0,
+    collect: json['collect'] ?? 0,
+    like: json['like'] ?? 0,
+    coin: json['coin'] ?? 0,
+    view: json['view'] ?? 0,
+    bannerList: json['bannerList'] != null
+        ? List<BannerData>.from(json['bannerList'].map((v) => BannerData.fromJson(v)))
+        : <BannerData>[],
+    courseList: json['courseList'] != null
+        ? List<Course>.from(json['courseList'].map((v) => Course.fromJson(v)))
+        : <Course>[],
+    benefitList: json['benefitList'] != null
+        ? List<Benefit>.from(json['benefitList'].map((v) => Benefit.fromJson(v)))
+        : <Benefit>[],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['face'] = this.face;
-    data['fans'] = this.fans;
-    data['collect'] = this.collect;
-    data['like'] = this.like;
-    data['coin'] = this.coin;
-    data['view'] = this.view;
-    if (this.bannerList != null) {
-      data['bannerList'] = this.bannerList.map((v) => v.toJson()).toList();
-    }
-    if (this.courseList != null) {
-      data['courseList'] = this.courseList.map((v) => v.toJson()).toList();
-    }
-    if (this.benefitList != null) {
-      data['benefitList'] = this.benefitList.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'face': face,
+    'fans': fans,
+    'collect': collect,
+    'like': like,
+    'coin': coin,
+    'view': view,
+    'bannerList': bannerList.map((v) => v.toJson()).toList(),
+    'courseList': courseList.map((v) => v.toJson()).toList(),
+    'benefitList': benefitList.map((v) => v.toJson()).toList(),
+  };
 }
 
 class Course {
-  String name;
-  String cover;
-  String url;
-  int group;
+  final String name;
+  final String cover;
+  final String url;
+  final int group;
 
-  Course({this.name, this.cover, this.url, this.group});
+  Course({required this.name, required this.cover, required this.url, required this.group});
 
-  Course.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    cover = json['cover'];
-    url = json['url'];
-    group = json['group'];
-  }
+  factory Course.fromJson(Map<String, dynamic> json) => Course(
+    name: json['name'] ?? '',
+    cover: json['cover'] ?? '',
+    url: json['url'] ?? '',
+    group: json['group'] ?? 0,
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['cover'] = this.cover;
-    data['url'] = this.url;
-    data['group'] = this.group;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'cover': cover,
+    'url': url,
+    'group': group,
+  };
 }
 
 class Benefit {
-  String name;
-  String url;
+  final String name;
+  final String url;
 
-  Benefit({this.name, this.url});
+  Benefit({required this.name, required this.url});
 
-  Benefit.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    url = json['url'];
-  }
+  factory Benefit.fromJson(Map<String, dynamic> json) => Benefit(
+    name: json['name'] ?? '',
+    url: json['url'] ?? '',
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['url'] = this.url;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'url': url,
+  };
 }

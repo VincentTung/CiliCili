@@ -1,23 +1,23 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter_cili/http/usecase/login_case.dart';
-import 'package:flutter_cili/storage/cache_controller.dart';
+import 'package:flutter_bilibili/http/usecase/login_case.dart';
+
+import '../../config.dart';
+import '../../util/log_util.dart';
 
 enum HttpMethod { GET, POST, DELETE, PUT }
 
 ///网络请求基类
 abstract class BaseRequest {
 
-  var pathParams;
-  var userHttps = false;
+
+  String? pathParams;
 
 
   BaseRequest() {
-    header[LoginCase.TOKEN] = LoginCase.getToken();
+    header[TOKEN] = LoginCase.getToken();
   }
 
-
   String domain() {
-    return "127.0.0.1";
+    return DOMAIN;
   }
 
   HttpMethod httpMethod();
@@ -25,7 +25,7 @@ abstract class BaseRequest {
   String path();
 
   String url() {
-    params['apikey'] = 'youapyike';
+    params['apikey'] = API_KEY;
     Uri uri;
     var pathString = path();
 
@@ -44,25 +44,23 @@ abstract class BaseRequest {
     }
 
     var url = uri.toString();
-    print('url:$url');
+    logD('url:$url');
     return url;
   }
 
-
   bool needLogin();
 
-  Map<String, String> params = Map();
+  Map<String, String> params = {};
 
   BaseRequest addParams(String key, Object value) {
     params[key] = value.toString();
     return this;
   }
 
-  Map<String, dynamic> header = Map();
+  Map<String, dynamic> header = {};
 
   BaseRequest addHeader(String key, Object value) {
     header[key] = value.toString();
     return this;
   }
-
 }

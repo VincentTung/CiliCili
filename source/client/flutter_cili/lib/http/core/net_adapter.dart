@@ -1,19 +1,22 @@
 import 'dart:convert';
 
-import 'package:flutter_cili/http/request/base_request.dart';
+import 'package:flutter_bilibili/http/request/base_request.dart';
 
 
 abstract class NetAdapter {
   Future<NetResponse<T>> send<T>(BaseRequest request);
+  void clearCache();
 }
 
 
 class NetResponse<T> {
-  NetResponse({this.data,
-    this.request,
-    this.code,
-    this.statusMessage,
-    this.extra});
+  NetResponse({
+    required this.data,
+    required this.request,
+    required this.code,
+    required this.statusMessage,
+    this.extra,
+  });
 
   T data;
   BaseRequest request;
@@ -29,4 +32,5 @@ class NetResponse<T> {
       return data.toString();
     }
   }
+
 }

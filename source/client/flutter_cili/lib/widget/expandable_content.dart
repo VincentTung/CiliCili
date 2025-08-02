@@ -1,16 +1,14 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/util/view_util.dart';
-import 'package:flutter_cili/widget/video_toolbar.dart';
+import 'package:flutter_bilibili/model/video.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
+import 'package:flutter_bilibili/util/theme_data.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 class ExpandableContent extends StatefulWidget {
   final Video video;
+  final bool isDark ;
 
-  const ExpandableContent({Key key, @required this.video}) : super(key: key);
+  const ExpandableContent({Key? key, required this.video, this.isDark = false}) : super(key: key);
 
   @override
   _ExpandableContentState createState() => _ExpandableContentState();
@@ -22,8 +20,8 @@ class _ExpandableContentState extends State<ExpandableContent>
   CurveTween(curve: Curves.easeIn);
   bool _expand = false;
 
-  AnimationController _controller;
-  Animation<double> _heightFactor;
+  late AnimationController _controller;
+  late Animation<double> _heightFactor;
 
   @override
   void initState() {
@@ -68,8 +66,10 @@ class _ExpandableContentState extends State<ExpandableContent>
         children: [
           Expanded(
               child: Text(
+                
                 widget.video.title,
                 maxLines: 1,
+                style: TextStyle(color: getTextColor(widget.isDark)),
                 overflow: TextOverflow.ellipsis,
               )),
           Padding(
@@ -120,7 +120,7 @@ class _ExpandableContentState extends State<ExpandableContent>
       desc, style: TextStyle(fontSize: 12, color: Colors.grey),) : null;
     return AnimatedBuilder(animation: _controller.view,
         child: child,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return Align(
             heightFactor: _heightFactor.value,
             alignment: Alignment.topCenter,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/color.dart';
+import 'package:flutter_bilibili/util/color.dart';
 
 ///自定义输入框 左边带提示text
 class LoginInput extends StatefulWidget {
@@ -18,13 +18,12 @@ class LoginInput extends StatefulWidget {
 
   const LoginInput(
       this.title,
-      this.hint, {Key key,
-
-        this.onChanged,
-        this.focusChanged,
+      this.hint, {Key? key,
+        required this.onChanged,
+        required this.focusChanged,
         this.lineStretch = false,
         this.obscureText = false,
-        this.keyboardType})
+        required this.keyboardType})
       : super(key: key);
 
   @override
@@ -40,9 +39,7 @@ class _LoginInputState extends State<LoginInput> {
     _focusNode.addListener(() {
       print('focusChange:${_focusNode.hasFocus}');
 
-      if (widget.focusChanged != null) {
-        widget.focusChanged(_focusNode.hasFocus);
-      }
+      widget.focusChanged(_focusNode.hasFocus);
     });
   }
 
@@ -102,7 +99,7 @@ class _LoginInputState extends State<LoginInput> {
           contentPadding: EdgeInsets.only(left: 20, right: 20),
           border: InputBorder.none,
           //?? 为空才会进行的操作
-          hintText: widget.hint ?? '',
+          hintText: widget.hint,
           hintStyle: TextStyle(fontSize: 15, color: Colors.grey)
 
       ),

@@ -7,4 +7,6 @@ import java.util.HashMap;
 public interface UserService {
 
     User searchUserInfo(int uid);
+
+    void minusCoin(int uid);
 }

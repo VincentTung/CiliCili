@@ -1,12 +1,9 @@
 import 'dart:async';
 
-import 'package:chewie/src/chewie_player.dart';
-import 'package:chewie/src/chewie_progress_colors.dart';
-import 'package:chewie/src/material_progress_bar.dart';
-import 'package:chewie/src/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/log_util.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
 import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 
 ///自定义播放器UI
 class MaterialControls extends StatefulWidget {
@@ -17,16 +14,16 @@ class MaterialControls extends StatefulWidget {
   final bool showBigPlayIcon;
 
   //视频浮层
-  final Widget overlayUI;
+  final Widget? overlayUI;
 
   //底部渐变
-  final Gradient bottomGradient;
+  final Gradient? bottomGradient;
 
   //弹幕浮层
-  final Widget barrageUI;
+  final Widget? barrageUI;
 
   const MaterialControls(
-      {Key key,
+      {Key? key,
         this.showLoadingOnInitialize = true,
         this.showBigPlayIcon = true,
         this.overlayUI,
@@ -42,30 +39,41 @@ class MaterialControls extends StatefulWidget {
 
 class _MaterialControlsState extends State<MaterialControls>
     with SingleTickerProviderStateMixin {
-  VideoPlayerValue _latestValue;
-  double _latestVolume;
+  VideoPlayerValue? _latestValue;
+  double? _latestVolume;
   bool _hideStuff = true;
-  Timer _hideTimer;
-  Timer _initTimer;
-  Timer _showAfterExpandCollapseTimer;
+  Timer? _hideTimer;
+  Timer? _initTimer;
+  Timer? _showAfterExpandCollapseTimer;
   bool _dragging = false;
   bool _displayTapped = false;
 
   final barHeight = 48.0;
   final marginSize = 5.0;
 
-  VideoPlayerController controller;
-  ChewieController chewieController;
-  AnimationController playPauseIconAnimationController;
+  late VideoPlayerController controller;
+  ChewieController? chewieController;
+  AnimationController? playPauseIconAnimationController;
 
   @override
   Widget build(BuildContext context) {
-    if (_latestValue.hasError) {
-      return chewieController.errorBuilder != null
-          ? chewieController.errorBuilder(
+    if (chewieController == null) {
+      return Container(
+        color: Colors.black,
+        child: Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+    
+    if (_latestValue != null && _latestValue!.hasError) {
+      return chewieController?.errorBuilder != null
+          ? (chewieController!.errorBuilder?.call(
         context,
-        chewieController.videoPlayerController.value.errorDescription,
-      )
+        chewieController!.videoPlayerController.value.errorDescription ?? '',
+      ) ?? const SizedBox())
           : const Center(
         child: Icon(
           Icons.error,
@@ -89,9 +97,8 @@ class _MaterialControlsState extends State<MaterialControls>
               Column(
                 children: <Widget>[
                   if (_latestValue != null &&
-                      !_latestValue.isPlaying &&
-                      _latestValue.duration == null ||
-                      _latestValue.isBuffering)
+                      !_latestValue!.isPlaying ||
+                      _latestValue!.isBuffering)
                     Expanded(
                       child: Center(
                         child: _loadingIndicator(),
@@ -127,7 +134,14 @@ class _MaterialControlsState extends State<MaterialControls>
   void didChangeDependencies() {
     final _oldController = chewieController;
     chewieController = ChewieController.of(context);
-    controller = chewieController.videoPlayerController;
+    
+    if (chewieController == null) {
+      // 如果 chewieController 为空，直接返回
+      super.didChangeDependencies();
+      return;
+    }
+    
+    controller = chewieController!.videoPlayerController;
 
     playPauseIconAnimationController ??= AnimationController(
       vsync: this,
@@ -147,7 +161,7 @@ class _MaterialControlsState extends State<MaterialControls>
   AnimatedOpacity _buildBottomBar(
       BuildContext context,
       ) {
-    final iconColor = Theme.of(context).textTheme.button.color;
+    final iconColor = Theme.of(context).textTheme.labelLarge?.color;
 
     return AnimatedOpacity(
       opacity: _hideStuff ? 0.0 : 1.0,
@@ -160,18 +174,18 @@ class _MaterialControlsState extends State<MaterialControls>
         child: Row(
           children: <Widget>[
             _buildPlayPause(controller),
-            if (chewieController.isLive)
+            if (chewieController!.isLive)
               const SizedBox()
             else
               _buildProgressBar(),
-            if (chewieController.isLive)
+            if (chewieController!.isLive)
               const Expanded(child: Text('LIVE'))
             else
               _buildPosition(iconColor),
-            if (chewieController.allowPlaybackSpeedChanging)
+            if (chewieController!.allowPlaybackSpeedChanging)
               _buildSpeedButton(controller),
-            if (chewieController.allowMuting) _buildMuteButton(controller),
-            if (chewieController.allowFullScreen) _buildExpandButton(),
+            if (chewieController!.allowMuting) _buildMuteButton(controller),
+            if (chewieController!.allowFullScreen) _buildExpandButton(),
           ],
         ),
       ),
@@ -193,7 +207,7 @@ class _MaterialControlsState extends State<MaterialControls>
           ),
           child: Center(
             child: Icon(
-              chewieController.isFullScreen
+              chewieController!.isFullScreen
                   ? Icons.fullscreen_exit_rounded
                   : Icons.fullscreen_rounded,
               color: Colors.white,
@@ -205,12 +219,12 @@ class _MaterialControlsState extends State<MaterialControls>
   }
 
   Expanded _buildHitArea() {
-    final bool isFinished = _latestValue.position >= _latestValue.duration;
+    final bool isFinished = _latestValue!.position >= _latestValue!.duration;
 
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          if (_latestValue != null && _latestValue.isPlaying) {
+          if (_latestValue != null && _latestValue!.isPlaying) {
             if (_displayTapped) {
               setState(() {
                 _hideStuff = true;
@@ -231,7 +245,7 @@ class _MaterialControlsState extends State<MaterialControls>
           child: Center(
             child: AnimatedOpacity(
               opacity:
-              _latestValue != null && !_latestValue.isPlaying && !_dragging
+              _latestValue != null && !_latestValue!.isPlaying && !_dragging
                   ? 1.0
                   : 0.0,
 
@@ -241,7 +255,7 @@ class _MaterialControlsState extends State<MaterialControls>
                   ? GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).dialogBackgroundColor,
+                    color: Theme.of(context).dialogTheme.backgroundColor ?? Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(48.0),
                   ),
                   child: Padding(
@@ -252,7 +266,7 @@ class _MaterialControlsState extends State<MaterialControls>
                             : AnimatedIcon(
                           icon: AnimatedIcons.play_pause,
                           progress:
-                          playPauseIconAnimationController,
+                          playPauseIconAnimationController!,
                           size: 32.0,
                         ),
                         onPressed: () {
@@ -281,8 +295,8 @@ class _MaterialControlsState extends State<MaterialControls>
           isScrollControlled: true,
           useRootNavigator: true,
           builder: (context) => _PlaybackSpeedDialog(
-            speeds: chewieController.playbackSpeeds,
-            selected: _latestValue.playbackSpeed,
+            speeds: chewieController!.playbackSpeeds,
+            selected: _latestValue?.playbackSpeed,
           ),
         );
 
@@ -290,7 +304,7 @@ class _MaterialControlsState extends State<MaterialControls>
           controller.setPlaybackSpeed(chosenSpeed);
         }
 
-        if (_latestValue.isPlaying) {
+        if (_latestValue != null && _latestValue!.isPlaying) {
           _startHideTimer();
         }
       },
@@ -318,7 +332,7 @@ class _MaterialControlsState extends State<MaterialControls>
       onTap: () {
         _cancelAndRestartTimer();
 
-        if (_latestValue.volume == 0) {
+        if (_latestValue != null && _latestValue!.volume == 0) {
           controller.setVolume(_latestVolume ?? 0.5);
         } else {
           _latestVolume = controller.value.volume;
@@ -336,7 +350,7 @@ class _MaterialControlsState extends State<MaterialControls>
               right: 8.0,
             ),
             child: Icon(
-              (_latestValue != null && _latestValue.volume > 0)
+              (_latestValue != null && _latestValue!.volume > 0)
                   ? Icons.volume_up
                   : Icons.volume_off,
             ),
@@ -358,7 +372,7 @@ class _MaterialControlsState extends State<MaterialControls>
           right: 10.0,
         ),
         child: Icon(
-          controller.value.isPlaying
+          _latestValue != null && _latestValue!.isPlaying
               ? Icons.pause_rounded
               : Icons.play_arrow_rounded,
           color: Colors.white,
@@ -368,13 +382,9 @@ class _MaterialControlsState extends State<MaterialControls>
   }
 
   ///播放时间
-  Widget _buildPosition(Color iconColor) {
-    final position = _latestValue != null && _latestValue.position != null
-        ? _latestValue.position
-        : Duration.zero;
-    final duration = _latestValue != null && _latestValue.duration != null
-        ? _latestValue.duration
-        : Duration.zero;
+  Widget _buildPosition(Color? iconColor) {
+    final position = _latestValue?.position ?? Duration.zero;
+    final duration = _latestValue?.duration ?? Duration.zero;
 
     return Padding(
       padding: EdgeInsets.only(right: 5.0),
@@ -400,12 +410,11 @@ class _MaterialControlsState extends State<MaterialControls>
 
     _updateState();
 
-    if ((controller.value != null && controller.value.isPlaying) ||
-        chewieController.autoPlay) {
+    if (controller.value.isPlaying || chewieController!.autoPlay) {
       _startHideTimer();
     }
 
-    if (chewieController.showControlsOnInitialize) {
+    if (chewieController!.showControlsOnInitialize) {
       _initTimer = Timer(const Duration(milliseconds: 200), () {
         setState(() {
           _hideStuff = false;
@@ -415,14 +424,14 @@ class _MaterialControlsState extends State<MaterialControls>
   }
 
   void _onExpandCollapse() {
-    if(chewieController.videoPlayerController.value.size == null){
+    if(chewieController!.videoPlayerController.value.size == Size.zero){
       logW('_onExpandCollapse:videoPlayerController.value.size is null.');
       return ;
     }
     setState(() {
       _hideStuff = true;
 
-      chewieController.toggleFullScreen();
+      chewieController!.toggleFullScreen();
       _showAfterExpandCollapseTimer =
           Timer(const Duration(milliseconds: 300), () {
             setState(() {
@@ -434,31 +443,27 @@ class _MaterialControlsState extends State<MaterialControls>
 
   void _playPause() {
     bool isFinished;
-    if (_latestValue.duration != null) {
-      isFinished = _latestValue.position >= _latestValue.duration;
-    } else {
-      isFinished = false;
-    }
+    isFinished = _latestValue!.position >= _latestValue!.duration;
 
     setState(() {
-      if (controller.value.isPlaying) {
-        playPauseIconAnimationController.reverse();
+      if (_latestValue != null && _latestValue!.isPlaying) {
+        playPauseIconAnimationController?.reverse();
         _hideStuff = false;
         _hideTimer?.cancel();
         controller.pause();
       } else {
         _cancelAndRestartTimer();
 
-        if (!controller.value.initialized) {
+        if (_latestValue != null && !controller.value.isInitialized) {
           controller.initialize().then((_) {
             controller.play();
-            playPauseIconAnimationController.forward();
+            playPauseIconAnimationController?.forward();
           });
         } else {
           if (isFinished) {
             controller.seekTo(const Duration());
           }
-          playPauseIconAnimationController.forward();
+          playPauseIconAnimationController?.forward();
           controller.play();
         }
       }
@@ -499,11 +504,11 @@ class _MaterialControlsState extends State<MaterialControls>
 
             _startHideTimer();
           },
-          colors: chewieController.materialProgressColors ??
+          colors: chewieController!.materialProgressColors ??
               ChewieProgressColors(
-                  playedColor: Theme.of(context).accentColor,
-                  handleColor: Theme.of(context).accentColor,
-                  bufferedColor: Theme.of(context).backgroundColor,
+                  playedColor: Theme.of(context).colorScheme.secondary,
+                  handleColor: Theme.of(context).colorScheme.secondary,
+                  bufferedColor: Theme.of(context).colorScheme.surface,
                   backgroundColor: Theme.of(context).disabledColor),
         ),
       ),
@@ -525,19 +530,26 @@ class _MaterialControlsState extends State<MaterialControls>
         child: widget.overlayUI)
         : Container();
   }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    final twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+  }
 }
 
 class _PlaybackSpeedDialog extends StatelessWidget {
   const _PlaybackSpeedDialog({
-    Key key,
-    @required List<double> speeds,
-    @required double selected,
+    Key? key,
+    required List<double> speeds,
+    required double? selected,
   })  : _speeds = speeds,
         _selected = selected,
         super(key: key);
 
   final List<double> _speeds;
-  final double _selected;
+  final double? _selected;
 
   @override
   Widget build(BuildContext context) {

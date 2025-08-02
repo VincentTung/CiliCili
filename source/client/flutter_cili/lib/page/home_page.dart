@@ -1,234 +1,217 @@
 import 'package:flutter/material.dart' hide Banner;
-import 'package:flutter_cili/http/core/net_error.dart';
-import 'package:flutter_cili/core/base_state.dart';
-import 'package:flutter_cili/http/usecase/home_case.dart';
-import 'package:flutter_cili/model/home_data.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/navigator/navigator_controller.dart';
-import 'package:flutter_cili/page/home_tab_page.dart';
-import 'package:flutter_cili/util/color.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/util/toast.dart';
-import 'package:flutter_cili/util/view_util.dart';
-import 'package:flutter_cili/widget/immersion_navigationbar.dart';
-import 'package:flutter_cili/widget/loading.dart';
-import 'package:flutter_cili/widget/navigation_bar.dart';
-import 'package:flutter_cili/widget/v_tab.dart';
-import 'package:underline_indicator/underline_indicator.dart';
+import 'package:flutter_bilibili/core/base_state.dart';
+import 'package:flutter_bilibili/widget/loading.dart';
+import 'package:flutter_bilibili/widget/video_card.dart';
+import 'package:get/get.dart';
+import 'package:flutter_bilibili/controllers/video_controller.dart';
 
+import '../util/log_util.dart';
+
+///主页
 class HomePage extends StatefulWidget {
   final ValueChanged<int> onJumpTo;
 
-  const HomePage({Key key, this.onJumpTo}) : super(key: key);
+  const HomePage({super.key, required this.onJumpTo});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseState<HomePage>
-    with
-        WidgetsBindingObserver,
-        AutomaticKeepAliveClientMixin,
-        TickerProviderStateMixin {
-  var listener;
-  var _tabController;
-
-  List<Category> categoryList = [];
-  List<BannerData> bannerList = [];
-
-  bool _isLoading = true;
+class _HomePageState extends BaseState<HomePage> with TickerProviderStateMixin {
+  TabController? _controller;
+  List<String> _oldTabNames = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: categoryList.length, vsync: this);
-    WidgetsBinding.instance.addObserver(this);
-    NavigatorController.getInstance()
-        .addListener(listener = (currentPage, prePage) {
-      logD('current:${currentPage.page}');
-      logD('pre:${prePage.page}');
-      if (widget == currentPage.page || currentPage.page is HomePage) {
-        logD('打开了首页：onResume');
-      } else if (widget == prePage.page || (prePage.page is HomePage)) {
-        logD('首页：onPause');
-      }
+    // 初始化时获取Tab列表
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<VideoController>().fetchTabs();
     });
-    _loadData();
   }
 
   @override
   void dispose() {
+    _controller?.dispose();
     super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-
-    NavigatorController.getInstance().removeListener(listener);
   }
 
-  ///生命周期切换
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    logD('---applifecyclestate:$state');
-    switch (state) {
+  Widget build(BuildContext context) {
+    return GetX<VideoController>(
+      builder: (videoController) {
+        // 打印tabNames调试
+        logD('tabNames: ${videoController.tabNames}');
 
-      ///此时，任何时候都可能暂停
-      case AppLifecycleState.inactive:
-        break;
+        // 动态重建TabController
+        if (_controller == null ||
+            _oldTabNames.length != videoController.tabNames.length) {
+          _controller?.dispose();
+          if (videoController.tabNames.isNotEmpty) {
+            _controller = TabController(
+              length: videoController.tabNames.length,
+              vsync: this,
+            );
+            _controller!.addListener(() {
+              if (_controller!.indexIsChanging) {
+                videoController.changeTab(_controller!.index);
+              }
+            });
+            _oldTabNames = List.from(videoController.tabNames);
+          }
+        }
 
-      ///后台切前台 界面可见
-      case AppLifecycleState.resumed:
-        // Todo
+        if (videoController.isLoading) {
+          return const Center(
+            child: Loading(isLoading: true, child: SizedBox.shrink()),
+          );
+        }
 
-        changeStatusBar(
-            color: Colors.white, statusStyle: StatusStyle.DARK_CONTENT);
-        break;
+        if (videoController.error.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('加载失败: ${videoController.error}'),
+                ElevatedButton(
+                  onPressed: () {
+                    videoController.fetchTabs();
+                  },
+                  child: const Text('重试'),
+                ),
+              ],
+            ),
+          );
+        }
 
-      /// 后台，界面不可见
-      case AppLifecycleState.paused:
-        break;
+        if (videoController.tabNames.isEmpty) {
+          return const Center(child: Text('暂无数据'));
+        }
 
-      ///app结束时候调用
-      case AppLifecycleState.detached:
-        break;
-    }
+        return SafeArea(
+          child: Column(
+            children: [
+              _buildTabBar(videoController),
+              Expanded(child: _buildTabBarView(videoController)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTabBar(VideoController videoController) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          bottom: BorderSide(color: Colors.grey[300]!, width: 0.5),
+        ),
+      ),
+      child: _controller == null
+          ? SizedBox.shrink()
+          : TabBar(
+              isScrollable: true,
+              controller: _controller!,
+              tabs: videoController.tabNames
+                  .map((name) => Tab(text: name))
+                  .toList(),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Colors.red,
+              labelPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            ),
+    );
+  }
+
+  Widget _buildTabBarView(VideoController videoController) {
+    return _controller == null
+        ? SizedBox.shrink()
+        : TabBarView(
+            controller: _controller!,
+            children: videoController.tabNames.map((tabName) {
+              return HomeTabPage(tabName: tabName);
+            }).toList(),
+          );
+  }
+}
+
+class HomeTabPage extends StatefulWidget {
+  final String tabName;
+
+  const HomeTabPage({super.key, required this.tabName});
+
+  @override
+  _HomeTabPageState createState() => _HomeTabPageState();
+}
+
+class _HomeTabPageState extends State<HomeTabPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    // 初始化时获取该tab的视频列表
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<VideoController>().loadTabData(widget.tabName);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: Loading(
-        isLoading: _isLoading,
-        cover: true,
-        child: Column(
-          children: [
-            ImmersionNavigationBar(
-              height: 50,
-              child: _appbar(),
-              style: StatusBarStyle.style_light,
-              color: Colors.white,
+
+    return GetX<VideoController>(
+      builder: (videoController) {
+        final tabState = videoController.getTabState(widget.tabName);
+
+        if (tabState?.isLoading == true) {
+          return const Center(
+            child: Loading(isLoading: true, child: SizedBox.shrink()),
+          );
+        }
+
+        if (tabState?.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('加载失败: ${tabState!.error}'),
+                ElevatedButton(
+                  onPressed: () {
+                    videoController.loadTabData(widget.tabName);
+                  },
+                  child: const Text('重试'),
+                ),
+              ],
             ),
-            Container(decoration: bottomBoxShadow(), child: _tabBar()),
-            Flexible(
-                child: TabBarView(
-              controller: _tabController,
-              children: categoryList
-                  .map((tab) => HomeTabPage(
-                        categoryName: tab.name,
-                        bannerList: tab.name == '推荐' ? bannerList : null,
-                      ))
-                  .toList(),
-            ))
-          ],
-        ),
-      ),
-    );
-  }
+          );
+        }
 
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+        final videos = tabState?.videos ?? [];
+        if (videos.isEmpty) {
+          return const Center(child: Text('暂无视频'));
+        }
 
-  _tabBar() {
-    return VTab(
-      tabsItem: categoryList.map<Tab>((tab) {
-        return Tab(
-          text: tab.name,
-        );
-      }).toList(),
-      controller: _tabController,
-      fontSize: 16,
-      borderWidth: 3,
-      unSelectLabelColor: Colors.black54,
-      insets: 13,
-    );
-  }
-
-  void _loadData() async {
-    try {
-      HomeData result = await HomeCase.get('推荐');
-      if (result.categoryList != null) {
-        _tabController =
-            TabController(length: result.categoryList.length, vsync: this);
-
-        setState(() {
-          categoryList = result.categoryList;
-          bannerList = result.bannerList;
-        });
-        _isLoading = false;
-      }
-    } on NeedAuth catch (e) {
-      print(e);
-      showWarningToast(e.message);
-      setState(() {
-        _isLoading = false;
-      });
-    } on NetError catch (e) {
-      print(e);
-      showWarningToast(e.message);
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  _appbar() {
-    return Padding(
-      padding: EdgeInsets.only(left: 15, right: 15),
-      child: Row(
-        children: [
-          ///左侧头像
-          InkWell(
-            onTap: () {
-              if (widget.onJumpTo != null) {
-                widget.onJumpTo(3);
-              }
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(23),
-              child: Image(
-                height: 46,
-                width: 46,
-                image: AssetImage('images/avatar.png'),
-              ),
-            ),
+        return GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2列
+            childAspectRatio: 0.8, // 宽高比
+            crossAxisSpacing: 8.0, // 列间距
+            mainAxisSpacing: 8.0, // 行间距
           ),
-
-          ///搜索栏
-          Expanded(
-              child: Padding(
-            padding: EdgeInsets.only(left: 15, right: 15),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  height: 32,
-                  alignment: Alignment.centerLeft,
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  decoration: BoxDecoration(color: Colors.grey[100])),
-            ),
-          )),
-
-          ///指南针
-          Icon(Icons.explore_outlined, color: Colors.grey),
-
-          ///mail
-          Padding(
-              padding: EdgeInsets.only(left: 12),
-              child: InkWell(
-                onTap: () {
-                  NavigatorController.getInstance()
-                      .onJumpTo(RouteStatus.notice);
-                },
-                child: Padding(
-                    padding: EdgeInsets.only(left: 12),
-                    child: Icon(Icons.mail_outline, color: Colors.grey)),
-              ))
-        ],
-      ),
+          itemCount: videos.length,
+          itemBuilder: (context, index) {
+            return VideoCard(video: videos[index]);
+          },
+        );
+      },
     );
   }
 }

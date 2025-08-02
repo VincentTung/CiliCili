@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_cili/model/home_data.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/navigator/navigator_controller.dart';
-import 'package:flutter_cili/util/format_util.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/util/view_util.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_bilibili/model/home_data.dart';
+import 'package:flutter_bilibili/util/format_util.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
+
 
 import 'banner_widget.dart';
 
 class NoticeCard extends StatelessWidget {
   final BannerData banner;
 
-  const NoticeCard({Key key, this.banner}) : super(key: key);
+  const NoticeCard({Key? key, required this.banner}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

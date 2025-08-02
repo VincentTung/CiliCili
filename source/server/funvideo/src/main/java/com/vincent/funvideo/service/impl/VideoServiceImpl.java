@@ -57,20 +57,30 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public HashMap getVideoDetail(Integer id) {
+    public HashMap getVideoDetail(int id) {
         return videoDao.searchById(id);
     }
 
     @Override
-    public List<HashMap> getRecommendVideo(Integer start, Integer length) {
+    public List<HashMap> getRecommendVideo(int start, int length) {
         HashMap params = new HashMap();
         params.put("start",getRealStart(start,length));
         params.put("length",length);
         return videoDao.getRecommend(params);
     }
 
+    @Override
+    public void viewVideo(int id) {
+        videoDao.viewVideo(id);
+    }
+
+    @Override
+    public List<HashMap> searchVideoByWord(String keyword) {
+        return videoDao.searchVideoByWord(keyword);
+    }
+
 
     private int getRealStart(int start,int length){
-        return   (start -1)*length;
+        return   start;
     }
 }

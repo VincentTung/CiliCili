@@ -6,5 +6,5 @@ import java.util.HashMap;
 
 @Mapper
 public interface AuthoriseDao {
-    Integer searchByPwd(HashMap params);
+    HashMap searchByPwd(String   name);
 }

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/view_util.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 ///状态栏 主题
-enum StatusBarStyle { style_light, style_dark }
+
 
 class ImmersionNavigationBar extends StatelessWidget {
-  final StatusBarStyle style;
+  final StatusStyle style;
   final Color color;
   final double height;
   final Widget child;
-
   const ImmersionNavigationBar(
-      {Key key, this.style, this.color, this.height = 46, this.child})
+      {Key? key, required this.style, required this.color, this.height = 46, required this.child})
       : super(key: key);
 
   @override
@@ -29,6 +28,6 @@ class ImmersionNavigationBar extends StatelessWidget {
   }
 
   void _statusbarInit() {
-    // changeStatusBar(color: color, statusStyle:style);
+    changeStatusBar(color: color, statusStyle: style);
   }
 }

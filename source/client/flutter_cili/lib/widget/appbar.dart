@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/util/view_util.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 //
 // class Appbar extends StatefulWidget{
 //   @override

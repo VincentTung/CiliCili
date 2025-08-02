@@ -13,6 +13,6 @@ class CancelLikeRequest extends BaseRequest {
 
   @override
   String path() {
-    return 'funvideo-api/action/like';
+    return 'api/action/like';
   }
 }

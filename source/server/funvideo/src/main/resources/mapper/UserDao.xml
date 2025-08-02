@@ -12,7 +12,9 @@
     <select id="searchUserDetailById" parameterType="int" resultType="HashMap">
 
 
-
-
     </select>
+    <update id="minusCoin" parameterType="int">
+        UPDATE user
+        SET `coin` = `coin` - 1;
+    </update>
 </mapper>

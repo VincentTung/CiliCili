@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_cili/model/profile_data.dart';
-import 'package:flutter_cili/util/view_util.dart';
+import 'package:flutter_bilibili/model/profile_data.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 ///职场进阶
 class CourseCard extends StatelessWidget {
   final List<Course> courseList;
 
-  const CourseCard({Key key, @required this.courseList}) : super(key: key);
+  const CourseCard({required Key key, required this.courseList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +37,17 @@ class CourseCard extends StatelessWidget {
 
   ///动态布局
   _buildCardList(BuildContext context) {
-    var courseGroup = Map();
+    var courseGroup = <int, List<Course>>{};
     //将课程进行分组
-    courseList.forEach((mo) {
+    for (final mo in courseList) {
       if (!courseGroup.containsKey(mo.group)) {
-        courseGroup[mo.group] = [];
+        courseGroup[mo.group] = <Course>[];
       }
-      List list = courseGroup[mo.group];
+      List<Course> list = courseGroup[mo.group]!;
       list.add(mo);
-    });
+    }
     return courseGroup.entries.map((e) {
-      List list = e.value;
+      List<Course> list = e.value;
       //根据卡片数量计算出每个卡片的宽度
       var width =
           (MediaQuery.of(context).size.width - 20 - (list.length - 1) * 5) /

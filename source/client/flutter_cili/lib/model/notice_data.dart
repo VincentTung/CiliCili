@@ -1,28 +1,20 @@
-
-import 'package:flutter_cili/model/home_data.dart';
+import 'package:flutter_bilibili/model/home_data.dart';
 
 class NoticeData {
-  int total;
-  List<BannerData> list;
+  final int total;
+  final List<BannerData> list;
 
-  NoticeData({this.total, this.list});
+  NoticeData({required this.total, required this.list});
 
-  NoticeData.fromJson(Map<String, dynamic> json) {
-    total = json['total'];
-    if (json['list'] != null) {
-      list = new List<BannerData>.empty(growable: true);
-      json['list'].forEach((v) {
-        list.add(new BannerData.fromJson(v));
-      });
-    }
-  }
+  factory NoticeData.fromJson(Map<String, dynamic> json) => NoticeData(
+    total: json['total'] ?? 0,
+    list: json['list'] != null
+        ? List<BannerData>.from(json['list'].map((v) => BannerData.fromJson(v)))
+        : <BannerData>[],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total'] = this.total;
-    if (this.list != null) {
-      data['list'] = this.list.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    'total': total,
+    'list': list.map((v) => v.toJson()).toList(),
+  };
 }

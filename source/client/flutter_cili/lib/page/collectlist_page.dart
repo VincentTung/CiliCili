@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/core/base_tab_state.dart';
-import 'package:flutter_cili/http/usecase/collectlist_case.dart';
-import 'package:flutter_cili/model/ranking_data.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/navigator/navigator_controller.dart';
-import 'package:flutter_cili/page/video_detail_page.dart';
-import 'package:flutter_cili/util/view_util.dart';
-import 'package:flutter_cili/widget/navigation_bar.dart';
-import 'package:flutter_cili/widget/video_large_card.dart';
+import 'package:flutter_bilibili/core/base_tab_state.dart';
+import 'package:flutter_bilibili/http/usecase/collectlist_case.dart';
+import 'package:flutter_bilibili/model/ranking_data.dart';
+import 'package:flutter_bilibili/model/video.dart';
+import 'package:flutter_bilibili/navigator/navigator_controller.dart';
+import 'package:flutter_bilibili/page/video_detail_page.dart';
+import 'package:flutter_bilibili/util/theme_data.dart';
+import 'package:flutter_bilibili/widget/video_large_card.dart';
+import 'package:get/get.dart';
+import 'package:flutter_bilibili/controllers/theme_controller.dart';
 
 class CollectListPage extends StatefulWidget {
   @override
@@ -16,15 +17,15 @@ class CollectListPage extends StatefulWidget {
 
 class _CollectListPageState
     extends BaseTabState<RankingData, Video, CollectListPage> {
-  RouteChangeListener listener;
-
+  RouteChangeListener? listener;
 
   @override
   void initState() {
     super.initState();
+
     NavigatorController.getInstance().addListener(
-        this.listener = (currentPage, prePage) {
-          if (prePage?.page is VideoDetailPage &&
+        listener = (currentPage, prePage) {
+          if (prePage.page is VideoDetailPage &&
               currentPage is CollectListPage) {
             loadData();
           }
@@ -33,25 +34,32 @@ class _CollectListPageState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [_buildNavigationBar(), Expanded(child: super.build(context))],
-    );
-  }
-
-
-  _buildNavigationBar() {
-    return NavigationBar(
-      child: Container(
-        decoration: bottomBoxShadow(),
-        alignment: Alignment.center,
-        child: Text('收藏', style: TextStyle(fontSize: 16)),
-      ),
+    super.build(context);
+    return GetX<ThemeController>(
+      builder: (themeController) {
+        final isDark = themeController.isDarkMode(context);
+        return Scaffold(
+          backgroundColor: getBackgroundColor(isDark),
+          appBar: AppBar(
+            backgroundColor: getBackgroundColor(isDark),
+            elevation: 0,
+            title: Text(
+              '收藏',
+              style: TextStyle(color: getTextColor(isDark)),
+            ),
+            iconTheme: IconThemeData(color: getTextColor(isDark)),
+          ),
+          body: SafeArea(
+            child: super.build(context),
+          ),
+        );
+      },
     );
   }
 
   @override
   void dispose() {
-    NavigatorController.getInstance().removeListener(listener);
+    NavigatorController.getInstance().removeListener(listener!);
     super.dispose();
   }
 
@@ -63,7 +71,6 @@ class _CollectListPageState
           controller: scrollController,
           itemBuilder: (BuildContext context, int index) =>
               VideoLargeCard(video: dataList[index]));
-
 
   @override
   Future<RankingData> getData(int pageIndex) async {

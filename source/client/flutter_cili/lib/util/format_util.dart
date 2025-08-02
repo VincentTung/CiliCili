@@ -27,3 +27,24 @@ String dateMonthAndDay(String dateStr) {
   String formatted = formatter.format(now);
   return formatted;
 }
+
+///时间格式化，用于评论时间显示
+String formatTime(String timeStr) {
+  try {
+    DateTime dateTime = DateTime.parse(timeStr);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+    
+    if (difference.inDays > 0) {
+      return '${difference.inDays}天前';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}小时前';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}分钟前';
+    } else {
+      return '刚刚';
+    }
+  } catch (e) {
+    return timeStr;
+  }
+}

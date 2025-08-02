@@ -1,8 +1,8 @@
-import 'package:flutter_cili/http/core/net_controller.dart';
-import 'package:flutter_cili/http/request/base_request.dart';
-import 'package:flutter_cili/http/request/uncollect_request.dart';
-import 'package:flutter_cili/http/request/collect_request.dart';
-import 'package:flutter_cili/util/log_util.dart';
+import 'package:flutter_bilibili/http/core/net_controller.dart';
+import 'package:flutter_bilibili/http/request/base_request.dart';
+import 'package:flutter_bilibili/http/request/uncollect_request.dart';
+import 'package:flutter_bilibili/http/request/collect_request.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
 
 class CollectCase {
 

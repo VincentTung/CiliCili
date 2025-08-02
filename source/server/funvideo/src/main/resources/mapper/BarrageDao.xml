@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.funvideo.db.dao.BarrageDao">
+    <insert id="insertBarrage" parameterType="com.vincent.funvideo.db.pojo.Barrage">
+        INSERT INTO barrage (video_id, username, msg, send_time, uid)
+        VALUES (#{videoId}, #{username}, #{msg}, NOW(), #{uid})
+    </insert>
+
+    <select id="selectHistory" resultType="com.vincent.funvideo.db.pojo.Barrage">
+        SELECT id, video_id, username, msg, send_time, uid
+        FROM barrage
+        WHERE video_id = #{videoId}
+        ORDER BY send_time ASC
+        LIMIT #{limit}
+    </select>
+</mapper> 

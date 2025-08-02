@@ -50,7 +50,10 @@ public class ShiroConfig {
         filterMap.put("/video/new", "anon");
         filterMap.put("/video/collect", "anon");
         filterMap.put("/video/list", "anon");
+        filterMap.put("/video/barrage", "anon");
+        filterMap.put("/", "anon");
         filterMap.put("/**", "oauth2");
+//        filterMap.put("/video/barrage/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
         return shiroFilterFactoryBean;
     }

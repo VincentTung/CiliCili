@@ -1,4 +1,4 @@
-import 'package:flutter_cili/http/request/base_request.dart';
+import 'package:flutter_bilibili/http/request/base_request.dart';
 
 class HomeRequest extends BaseRequest{
   @override
@@ -8,13 +8,12 @@ class HomeRequest extends BaseRequest{
 
   @override
   bool needLogin() {
-
-    throw true;
+    return false;
   }
 
   @override
   String path() {
-  return 'funvideo-api/video/list';
+  return 'api/video/list';
   }
 
 }

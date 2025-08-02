@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/core/base_state.dart';
-import 'package:flutter_cili/http/core/net_error.dart';
-import 'package:flutter_cili/util/color.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/util/toast.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_bilibili/core/base_state.dart';
+import 'package:flutter_bilibili/http/core/net_error.dart';
+import 'package:flutter_bilibili/util/color.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
+import 'package:flutter_bilibili/util/toast.dart';
 
 /// M 数据实体类  L列表数据模型   T为具体widget
 abstract class BaseTabState<M, L, T extends StatefulWidget> extends BaseState<T>
     with AutomaticKeepAliveClientMixin {
-  final int LOADING_MORE_DISTANCE = 300;
+  final int LOADING_MORE_DISTANCE = 400;
   List<L> dataList = [];
   int pageIndex = 1;
   bool _isLoading = false;
 
+  bool isLoading(){
+    return _isLoading;
+  }
   get contentChild;
 
   ScrollController scrollController = ScrollController();
@@ -31,6 +33,7 @@ abstract class BaseTabState<M, L, T extends StatefulWidget> extends BaseState<T>
           scrollController.position.maxScrollExtent != 0) {
         logD('load data');
         loadData(loadMore: true);
+
       }
     });
     loadData();
@@ -78,7 +81,7 @@ abstract class BaseTabState<M, L, T extends StatefulWidget> extends BaseState<T>
       setState(() {
         if (loadMore) {
           dataList = [...dataList, ...parseList(result)];
-          if (parseList(result).length != 0) {
+          if (parseList(result).isNotEmpty) {
             pageIndex++;
           }
         } else {
@@ -91,13 +94,13 @@ abstract class BaseTabState<M, L, T extends StatefulWidget> extends BaseState<T>
         });
       });
     } on NeedAuth catch (e) {
-      print(e);
+      logE(e);
       showWarningToast(e.message);
       setState(() {
         _isLoading = false;
       });
     } on NetError catch (e) {
-      print(e);
+      logE(e);
       showWarningToast(e.message);
       setState(() {
         _isLoading = false;

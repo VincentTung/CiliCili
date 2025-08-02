@@ -11,21 +11,26 @@ import com.vincent.funvideo.service.UserService;
 import com.vincent.funvideo.util.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.Cacheable;
 
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
 @Api("用户接口相关")
+@Slf4j
 public class UserController  extends  BaseController{
 
     @Autowired
@@ -48,12 +53,20 @@ public class UserController  extends  BaseController{
     @ApiOperation("登录")
     public R login(@Valid LoginForm form) {
         checkApiKey(form);
-        Integer uid = authoriseService.searchByPwd(form.getUsername(), form.getPwd());
+        
+        // 使用加密密码验证
+        Integer uid = authoriseService.searchByEncryptedPwd(form.getUsername(), form.getPwd(), form.getEncryptType());
+        
         if (uid != null) {
             String token = jwtUtil.createToken(uid);
             saveCacheToken(token, uid);
-            return R.ok().put("token", token);
+            
+            // 记录登录日志（不记录密码）
+            log.info("用户登录成功 - 用户名: {}, UID: {}", form.getUsername(), uid);
+            
+            return R.ok().put("token", token).put("uid", uid);
         } else {
+            log.warn("用户登录失败 - 用户名: {}", form.getUsername());
             return R.error("账号信息错误");
         }
     }
@@ -67,15 +80,16 @@ public class UserController  extends  BaseController{
         int collectSize = recordService.getCollectList(uid).size();
         int likeSize = recordService.getLikeList(uid).size();
         int viewSize = recordService.getViewList(uid).size();
+        List fansList = recordService.getFanList(uid);
 
         HashMap result = new HashMap();
         result.put("name", user.getName());
         result.put("face", user.getFace());
-        result.put("fans", user.getFans());
+        result.put("fans", fansList == null? 0:fansList.size());
         result.put("collect", collectSize);
         result.put("like", likeSize);
         result.put("view", viewSize);
-        result.put("coin",888);
+        result.put("coin",user.getCoin());
         result.put("bannerList", bannerService.getBanners());
         result.put("courseList", Collections.emptyList());
         result.put("benefitList",Collections.emptyList());

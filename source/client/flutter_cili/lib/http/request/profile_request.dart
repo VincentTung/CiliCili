@@ -15,6 +15,6 @@ class ProfileRequest extends BaseRequest {
 
   @override
   String path() {
-    return "funvideo-api/user/profile";
+    return "api/user/profile";
   }
 }

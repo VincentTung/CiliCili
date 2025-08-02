@@ -13,6 +13,6 @@ class CancelHateRequest extends BaseRequest {
 
   @override
   String path() {
-    return 'funvideo-api/action/hate';
+    return 'api/action/hate';
   }
 }

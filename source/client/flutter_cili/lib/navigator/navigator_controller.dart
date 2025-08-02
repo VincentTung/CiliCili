@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/navigator/bottom_navigator.dart';
-import 'package:flutter_cili/page/home_page.dart';
-import 'package:flutter_cili/page/login_page.dart';
-import 'package:flutter_cili/page/notice_page.dart';
-import 'package:flutter_cili/page/regist_page.dart';
-import 'package:flutter_cili/page/video_detail_page.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_bilibili/navigator/bottom_navigator.dart';
+import 'package:flutter_bilibili/page/about_page.dart';
+import 'package:flutter_bilibili/page/coinrecord_page.dart';
+import 'package:flutter_bilibili/page/fans_page.dart';
+import 'package:flutter_bilibili/page/likerecord_page.dart';
+import 'package:flutter_bilibili/page/login_page.dart';
+import 'package:flutter_bilibili/page/mode_setting_page.dart';
+import 'package:flutter_bilibili/page/notice_page.dart';
+import 'package:flutter_bilibili/page/play_setting_page.dart';
+import 'package:flutter_bilibili/page/regist_page.dart';
+import 'package:flutter_bilibili/page/search_page.dart';
+import 'package:flutter_bilibili/page/video_detail_page.dart';
+import 'package:flutter_bilibili/page/viewrecord_page.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
+import 'package:flutter_bilibili/util/url_util.dart';
 
-typedef RouteChangeListener(RouteStateInfo currentPage, RouteStateInfo prePage);
+typedef RouteChangeListener = void Function(RouteStateInfo currentPage, RouteStateInfo prePage);
 
-pageWrap(Widget child) {
-  return MaterialPage(key: ValueKey(child.hashCode), child: child);
+class CustomMaterialPage<T> extends MaterialPage<T> {
+  const CustomMaterialPage({required super.child, super.key});
+
+  @override
+  Route<T> createRoute(BuildContext context) {
+    return MaterialPageRoute<T>(
+      builder: (context) => child,
+      settings: this,
+      fullscreenDialog: false,
+    );
+  }
 }
 
 ///获取位置
@@ -21,11 +37,26 @@ int getPageIndex(List<MaterialPage> pages, RouteStatus status) {
     if (getStatus(page) == status) {
       return index;
     }
-    ;
   }
+  return -1;
 }
 
-enum RouteStatus { login, register, home, detail,notice, unknown }
+enum RouteStatus {
+  login,
+  register,
+  home,
+  detail,
+  notice,
+  about,
+  play_setting,
+  mode_setting,
+  search,
+  unknown,
+  view_record,
+  like_record,
+  coin_record,
+  fans,
+}
 
 RouteStatus getStatus(MaterialPage page) {
   if (page.child is LoginPage) {
@@ -36,8 +67,25 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.home;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
-  }else if (page.child is NoticePage) {
+  } else if (page.child is NoticePage) {
     return RouteStatus.notice;
+  } else if (page.child is AboutPage) {
+    return RouteStatus.about;
+  } else if (page.child is PlaySettingPage) {
+    return RouteStatus.play_setting;
+  } else if (page.child is ModeSettingPage) {
+    return RouteStatus.mode_setting;
+  } else if (page.child is ViewRecordPage) {
+    return RouteStatus.view_record;
+  } else if (page.child is LikeRecordPage) {
+    return RouteStatus.like_record;
+  } else if (page.child is CoinRecordPage) {
+    return RouteStatus.coin_record;
+  }
+  else if (page.child is SearchPage) {
+    return RouteStatus.search;
+  } else if (page.child is FansPage) {
+    return RouteStatus.fans;
   } else {
     return RouteStatus.unknown;
   }
@@ -53,31 +101,23 @@ class RouteStateInfo {
 }
 
 class NavigatorController extends _RouteJumpListener {
-  RouteJumpListener _routeJump;
+  late RouteJumpListener _routeJump;
   List<RouteChangeListener> _listeners = [];
-  RouteStateInfo _current;
-  RouteStateInfo _bottomTab;
+  RouteStateInfo? _current;
+  RouteStateInfo? _bottomTab;
+
+  static final NavigatorController _instance = NavigatorController._();
 
   NavigatorController._();
 
-  static NavigatorController _instance;
+  static NavigatorController getInstance() => _instance;
 
-  static NavigatorController getInstance() {
-    if (_instance == null) {
-      _instance = NavigatorController._();
-    }
-    return _instance;
-  }
   Future<bool> openHtml(String url) async {
-    var result = await canLaunch(url);
-    if (result) {
-      return await launch(url);
-    } else {
-      return Future.value(false);
-    }
+    return await UrlUtil.openUrl(url);
   }
+
   void registerRouteJumpListener(RouteJumpListener listener) {
-    this._routeJump = listener;
+    _routeJump = listener;
   }
 
   void addListener(RouteChangeListener listener) {
@@ -88,7 +128,7 @@ class NavigatorController extends _RouteJumpListener {
 
   void onBottomTabChange(int index, Widget widget) {
     _bottomTab = RouteStateInfo(RouteStatus.home, widget);
-    _notify(_bottomTab);
+    _notify(_bottomTab!);
   }
 
   void removeListener(RouteChangeListener listener) {
@@ -96,7 +136,7 @@ class NavigatorController extends _RouteJumpListener {
   }
 
   @override
-  void onJumpTo(RouteStatus status, {Map args}) {
+  void onJumpTo(RouteStatus status, {Map? args}) {
     _routeJump.onJumpTo(status, args: args);
   }
 
@@ -112,28 +152,30 @@ class NavigatorController extends _RouteJumpListener {
     logD('navigator_current:${current.page}');
     logD('navigator_current:${_current?.page}');
 
-    if(current.page is BottomNavigator && _bottomTab != null){
+    if (current.page is BottomNavigator && _bottomTab != null) {
       //首页的话 确定哪个tab
       _current = _bottomTab;
     }
     _listeners.forEach((listener) {
       /// ToDO  这是干啥
-      listener(current, _current);
+      listener(current, _current ?? current);
     });
     _current = current;
   }
-
-
 }
 
 abstract class _RouteJumpListener {
-  void onJumpTo(RouteStatus status, {Map args});
+  void onJumpTo(RouteStatus status, {Map? args});
 }
 
-typedef OnJumpTo = void Function(RouteStatus status, {Map args});
+typedef OnJumpTo = void Function(RouteStatus status, {Map? args});
 
 class RouteJumpListener {
   final OnJumpTo onJumpTo;
 
-  RouteJumpListener({this.onJumpTo});
+  RouteJumpListener({required this.onJumpTo});
+}
+
+pageWrap(Widget child) {
+  return CustomMaterialPage(key: ValueKey(child.hashCode), child: child);
 }

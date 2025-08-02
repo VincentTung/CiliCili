@@ -1,7 +1,7 @@
-import 'package:flutter_cili/http/core/net_controller.dart';
-import 'package:flutter_cili/http/request/video_detail_request.dart';
-import 'package:flutter_cili/model/video_detail_data.dart';
-import 'package:flutter_cili/util/log_util.dart';
+import 'package:flutter_bilibili/http/core/net_controller.dart';
+import 'package:flutter_bilibili/http/request/video_detail_request.dart';
+import 'package:flutter_bilibili/model/video_detail_data.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
 
 class VideoDetailCase {
   static get(int id) async {

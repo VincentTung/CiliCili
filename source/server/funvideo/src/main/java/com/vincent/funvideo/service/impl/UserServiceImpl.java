@@ -20,4 +20,9 @@ class UserServiceImpl implements UserService {
     public User searchUserInfo(int uid) {
         return userDao.selectById(uid);
     }
+
+    @Override
+    public void minusCoin(int uid) {
+        userDao.minusCoin(uid);
+    }
 }

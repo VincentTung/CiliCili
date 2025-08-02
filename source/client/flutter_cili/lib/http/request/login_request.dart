@@ -1,4 +1,4 @@
-import 'package:flutter_cili/http/request/base_request.dart';
+import 'package:flutter_bilibili/http/request/base_request.dart';
 
 class LoginRequest extends BaseRequest {
   @override
@@ -13,6 +13,6 @@ class LoginRequest extends BaseRequest {
 
   @override
   String path() {
-    return "/funvideo-api/user/login";
+    return "/api/user/login";
   }
 }

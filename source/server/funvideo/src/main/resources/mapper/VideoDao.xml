@@ -45,7 +45,8 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
@@ -83,7 +84,8 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
@@ -115,7 +117,8 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
@@ -145,7 +148,8 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
@@ -174,7 +178,8 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
@@ -204,11 +209,76 @@
                v.`size`,
                u.`name`,
                u.face,
-               u.fans
+               u.fans,
+               v.owner AS uper
 
         FROM video v
                  LEFT JOIN `user` u
                            ON v.owner = u.id
             LIMIT #{start}, #{length}
     </select>
+
+
+
+    <select id="searchVideoByWord" resultType="HashMap" parameterType="String">
+
+        SELECT v.id,
+               v.vid,
+               v.title,
+               v.tname,
+               v.url,
+               v.cover,
+               v.pubdate,
+               v.`desc`,
+               v.`view`,
+               v.duration,
+               v.reply,
+               v.favorite,
+               v.`like`,
+               v.coin,
+               v.`share`,
+               v.createTime,
+               v.`size`,
+               u.`name`,
+               u.face,
+               u.fans,
+               v.owner AS uper
+
+        FROM video v
+                 LEFT JOIN `user` u
+                           ON v.owner = u.id
+            WHERE  v.title LIKE concat('%',#{keyword},'%');
+    </select>
+
+    <update id="plusLikeCount" parameterType="int">
+        update video set `like` = `like`+ 1 WHERE id = #{id};
+    </update>
+    <update id="minusLikeCount" parameterType="int">
+        update video set `like` = `like`- 1 WHERE id = #{id};
+    </update>
+
+    <update id="plusCoinCount" parameterType="int">
+        update video set `coin` = `coin`+ 1 WHERE id = #{id};
+    </update>
+
+    <update id="minusCoinCount" parameterType="int">
+        update video set `coin` = `coin`-1 WHERE id = #{id};
+    </update>
+
+    <update id="plusCollectCount" parameterType="int">
+        update video set `favorite` = `favorite`+ 1 WHERE id = #{id};
+    </update>
+
+    <update id="minusCollectCount" parameterType="int">
+        update video set `favorite` = `favorite`- 1 WHERE id = #{id};
+    </update>
+    <update id="coinVideo" parameterType="int">
+        update video set `coin` = `coin`+ 1 WHERE id = #{id};
+    </update>
+
+    <update id="viewVideo" parameterType="int">
+        update video set `view` = `view`+ 1 WHERE id = #{id};
+    </update>
+
+
 </mapper>

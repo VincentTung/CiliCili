@@ -11,4 +11,6 @@ public interface UserDao {
     User selectById(int uid);
 
     HashMap searchUserDetailById(int uid);
+
+    void minusCoin(int uid);
 }

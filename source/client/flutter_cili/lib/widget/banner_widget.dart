@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/model/home_data.dart';
-import 'package:flutter_cili/model/video.dart';
-import 'package:flutter_cili/navigator/navigator_controller.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_bilibili/model/home_data.dart';
+import 'package:flutter_bilibili/model/video.dart';
+import 'package:flutter_bilibili/navigator/navigator_controller.dart';
+import 'package:card_swiper/card_swiper.dart';
 
 class BannerWidget extends StatelessWidget {
   final List<BannerData> bannerList;
   final double bannerHeight;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
 
-  const BannerWidget(this.bannerList,
-      {Key key,  this.bannerHeight = 160, this.padding})
-      : super(key: key);
+  const BannerWidget({Key? key, required this.bannerList, this.bannerHeight = 160, this.padding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +53,31 @@ class BannerWidget extends StatelessWidget {
 
 }
 void bannerClick(BannerData banner) {
-
   if(banner.type == 'video'){
-    NavigatorController.getInstance().onJumpTo(RouteStatus.detail,args: {'video':Video(vid:banner.url)});
+    NavigatorController.getInstance().onJumpTo(RouteStatus.detail,args: {'video':Video(
+      id: banner.id,
+      vid: '',
+      title: banner.title,
+      tname: '',
+      url: banner.url,
+      cover: banner.cover,
+      pubdate: 0,
+      desc: '',
+      view: 0,
+      duration: 0,
+      reply: 0,
+      favorite: 0,
+      like: 0,
+      coin: 0,
+      share: 0,
+      createTime: '',
+      size: 0,
+      name: '',
+      face: '',
+      fans: 0,
+      uper: 0,
+      isFocus: false,
+    )});
   }else{
     NavigatorController.getInstance().openHtml(banner.url);
   }

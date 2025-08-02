@@ -1,26 +1,19 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheController {
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
 
-  static CacheController _instance;
+  static CacheController? _instance;
 
-  CacheController._() {
-    init();
-  }
+  CacheController._();
 
   static CacheController getInstance() {
-    if (_instance == null) {
-      _instance = CacheController._();
-    }
-
-    return _instance;
+    _instance ??= CacheController._();
+    return _instance!;
   }
 
-  void init() async {
-    if (sharedPreferences == null) {
-      sharedPreferences = await SharedPreferences.getInstance();
-    }
+  Future<void> init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
   }
 
   static Future<CacheController> preInit() async {
@@ -28,11 +21,11 @@ class CacheController {
       var prefs = await SharedPreferences.getInstance();
       _instance = CacheController._pre(prefs);
     }
-    return _instance;
+    return _instance!;
   }
 
   CacheController._pre(SharedPreferences prefs) {
-    this.sharedPreferences = prefs;
+    sharedPreferences = prefs;
   }
 
   setString(String key, String value) {
@@ -40,7 +33,7 @@ class CacheController {
   }
 
   String getString(String key) {
-    return sharedPreferences.getString(key);
+    return sharedPreferences.getString(key) ?? '';
   }
 
   setDouble(String key, double value) {
@@ -48,7 +41,15 @@ class CacheController {
   }
 
   double getDouble(String key) {
-    return sharedPreferences.getDouble(key);
+    return sharedPreferences.getDouble(key) ?? 0.0;
+  }
+
+  setInt(String key, int value) {
+    sharedPreferences.setInt(key, value);
+  }
+
+  int getInt(String key) {
+    return sharedPreferences.getInt(key) ?? 0;
   }
 
   setStringList(String key, List<String> value) {
@@ -56,14 +57,26 @@ class CacheController {
   }
 
   List<String> getStringList(String key) {
-    return sharedPreferences.getStringList(key);
+    return sharedPreferences.getStringList(key) ?? <String>[];
   }
 
-  T get<T>(String key) {
-    return sharedPreferences.get(key);
+  T? get<T>(String key) {
+    return sharedPreferences.get(key) as T?;
   }
 
-  void delete(String key){
+  void delete(String key) {
     sharedPreferences.remove(key);
+  }
+
+  bool getBool(String key) {
+    if (sharedPreferences.containsKey(key)) {
+      return sharedPreferences.getBool(key) ?? false;
+    } else {
+      return false;
+    }
+  }
+
+  setBool(String key, bool value) {
+    sharedPreferences.setBool(key, value);
   }
 }

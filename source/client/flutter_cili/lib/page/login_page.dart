@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cili/http/core/net_error.dart';
-import 'package:flutter_cili/http/usecase/login_case.dart';
-import 'package:flutter_cili/navigator/navigator_controller.dart';
-import 'package:flutter_cili/util/log_util.dart';
-import 'package:flutter_cili/util/string_util.dart';
-import 'package:flutter_cili/util/toast.dart';
-import 'package:flutter_cili/widget/appbar.dart';
-import 'package:flutter_cili/widget/login_button.dart';
-import 'package:flutter_cili/widget/login_effect.dart';
-import 'package:flutter_cili/widget/login_input.dart';
+import 'package:flutter_bilibili/http/core/net_error.dart';
+import 'package:flutter_bilibili/http/usecase/login_case.dart';
+import 'package:flutter_bilibili/navigator/navigator_controller.dart';
+import 'package:flutter_bilibili/util/log_util.dart';
+import 'package:flutter_bilibili/util/string_util.dart';
+import 'package:flutter_bilibili/util/toast.dart';
+import 'package:flutter_bilibili/widget/appbar.dart';
+import 'package:flutter_bilibili/widget/login_button.dart';
+import 'package:flutter_bilibili/widget/login_effect.dart';
+import 'package:flutter_bilibili/widget/login_input.dart';
 import 'package:ndialog/ndialog.dart';
+import 'package:get/get.dart';
+import 'package:flutter_bilibili/controllers/auth_controller.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback onJumpRegister;
   final VoidCallback onSuccessCallback;
 
-  const LoginPage({Key key, this.onJumpRegister, this.onSuccessCallback})
+  const LoginPage({Key? key, required this.onJumpRegister, required this.onSuccessCallback})
       : super(key: key);
 
   @override
@@ -24,20 +26,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool eyeClose = false;
-  String userName;
-  String pwd;
+  String userName = '';
+  String pwd = '';
 
   bool loginEnable = false;
 
   _LoginPageState();
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: appBar("密码登录", "注册", () {
-        NavigatorController.getInstance().onJumpTo(RouteStatus.register);
+        showToast("暂未开放");
+        // NavigatorController.getInstance().onJumpTo(RouteStatus.register);
       }),
       body: Container(
         child: ListView(
@@ -46,16 +47,12 @@ class _LoginPageState extends State<LoginPage> {
             LoginInput("用户名", "请输入用户名", lineStretch: true, onChanged: (text) {
               userName = text;
               _checkInput();
-            }, focusChanged: (focus) {
-              this.setState(() {
-                eyeClose = !focus;
-              });
-            }),
+            }, focusChanged: (hasFocus) {}, keyboardType: TextInputType.text),
             LoginInput("密码", "请输入密码", lineStretch: true, obscureText: true,
                 onChanged: (text) {
               pwd = text;
               _checkInput();
-            }),
+            }, focusChanged: (hasFocus) {}, keyboardType: TextInputType.text),
             Padding(
               padding: EdgeInsets.only(top: 20, right: 20),
               child: _loginButton(),
@@ -101,7 +98,10 @@ class _LoginPageState extends State<LoginPage> {
       if (result['code'] == 200) {
         logD('登录成功');
         showToast('登录成功');
-        NavigatorController.getInstance().onJumpTo(RouteStatus.home);
+        // 通知全局已登录
+        Get.find<AuthController>().login();
+        Navigator.pop(context);
+        NavigatorController.getInstance().onJumpTo(RouteStatus.home, args: {});
       } else {
         logD(result['msg']);
         showWarningToast(result['msg']);
@@ -110,18 +110,12 @@ class _LoginPageState extends State<LoginPage> {
       logW(e);
     } on NetError catch (e) {
       logW(e);
-
     }
   }
 
-  void _showLoading() async{
-
-    ProgressDialog progressDialog = ProgressDialog(context,
-        message:Text(""),
-        title:Text("请稍后...")
-    );
+  void _showLoading() async {
+    ProgressDialog progressDialog =
+        ProgressDialog(context, message: Text(""), title: Text("请稍后..."));
     progressDialog.show();
-
-
   }
 }

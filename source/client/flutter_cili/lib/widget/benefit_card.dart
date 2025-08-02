@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_cili/model/profile_data.dart';
-import 'package:flutter_cili/util/view_util.dart';
+import 'package:flutter_bilibili/model/profile_data.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 import 'custom_blur.dart';
 
@@ -9,7 +9,7 @@ import 'custom_blur.dart';
 class BenefitCard extends StatelessWidget {
   final List<Benefit> benefitList;
 
-  const BenefitCard({Key key, @required this.benefitList}) : super(key: key);
+  const BenefitCard({required Key key, required this.benefitList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class BenefitCard extends StatelessWidget {
             decoration: BoxDecoration(color: Colors.redAccent),
             child: Stack(
               children: [
-                Positioned.fill(child: VBlur()),
+                Positioned.fill(child: VBlur(child: Container(),)),
                 Positioned.fill(
                     child: Center(
                         child: Text(mo.name,
