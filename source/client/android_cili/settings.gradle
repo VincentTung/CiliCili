@@ -1,0 +1,4 @@
+include ':lib_arch'
+include ':app'
+rootProject.name = "AndroidCiliCili"
+include ':lib_ble'

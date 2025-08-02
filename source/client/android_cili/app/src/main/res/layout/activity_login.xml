@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="30dp"
+    android:background="@color/theme_setting_bg"
+    tools:context=".ui.activity.LoginActivity">
+
+    <ImageView
+        android:id="@+id/iv_head_left"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_80"
+        android:importantForAccessibility="no"
+        android:src="@drawable/head_left"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_title"
+        app:layout_constraintWidth_percent="0.25" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/cili_cili"
+        android:textColor="@color/orange"
+        android:textSize="@dimen/text_size_25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/form_container"
+        app:layout_constraintEnd_toStartOf="@+id/iv_head_right"
+        app:layout_constraintStart_toEndOf="@id/iv_head_left"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/iv_head_right"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_80"
+        android:importantForAccessibility="no"
+        android:src="@drawable/head_right"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/form_container"
+        app:layout_constraintStart_toEndOf="@id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.25" />
+
+    <!-- 表单区域 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/form_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_32"
+        android:paddingLeft="@dimen/dp_24"
+        android:paddingRight="@dimen/dp_24"
+        app:layout_constraintTop_toBottomOf="@id/iv_head_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 用户名行 -->
+        <TextView
+            android:id="@+id/tv_username_label"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="wrap_content"
+            android:text="@string/username"
+            android:textColor="@color/gray_222"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/et_name" />
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:lines="1"
+            android:maxLines="1"
+            android:hint="@string/please_input_username"
+            android:textColorHint="@color/gray_999"
+            android:textColor="@color/gray_222"
+            android:background="@android:color/transparent"
+            android:paddingLeft="@dimen/dp_8"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_username_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_username_label" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/gray_eee"
+            app:layout_constraintTop_toBottomOf="@id/et_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 密码行 -->
+        <TextView
+            android:id="@+id/tv_password_label"
+            android:layout_width="@dimen/dp_70"
+            android:layout_height="wrap_content"
+            android:text="@string/password"
+            android:textColor="@color/gray_222"
+            android:textSize="@dimen/text_size_16sp"
+
+            app:layout_constraintTop_toBottomOf="@id/line1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/et_pwd" />
+
+        <EditText
+            android:id="@+id/et_pwd"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_50"
+            android:background="@android:color/transparent"
+            android:hint="@string/please_input_password"
+            android:inputType="textPassword"
+
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingStart="@dimen/dp_8"
+            android:textColor="@color/gray_222"
+            android:textColorHint="@color/gray_999"
+
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_password_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_password_label" />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/gray_eee"
+            app:layout_constraintTop_toBottomOf="@id/et_pwd"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_32"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_18sp"
+            android:background="@drawable/bg_login_btn_orange"
+            app:layout_constraintTop_toBottomOf="@id/line2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:visibility="invisible"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminateTint="@color/progress_yellow"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

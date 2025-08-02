@@ -1,0 +1,12 @@
+<resources>
+    <color name="gray_222_short">#FFFFFF</color>
+    <color name="gray_888_short">#FFFFFF</color>
+    <color name="setting_item_text">#FFFFFF</color>
+    <color name="theme_setting_bg">#000000</color>
+    <color name="theme_item_text">#FFFFFF</color>
+    <color name="gray_222">#FFFFFF</color>
+    <color name="gray_666">#FFFFFF</color>
+    <color name="gray_888">#FFFFFF</color>
+    <color name="gray_999">#FFFFFF</color>
+    <color name="gray_f5">#000000</color>
+</resources>

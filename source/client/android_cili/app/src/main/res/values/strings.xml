@@ -1,0 +1,40 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">AndCiliCili</string>
+    <string name="title_activity_v_m_mutlie_obser">VMMultiObserverActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_thread_test">ThreadTestActivity</string>
+    <string name="no_data" tools:ignore="ExtraTranslation">到底了</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error">参数错误</string>
+    <string name="login">登录</string>
+    <string name="login_success">登录成功</string>
+    <string name="cili_cili">CiliCili</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="please_input_username">请输入用户名</string>
+    <string name="please_input_password">请输入密码</string>
+    <string name="about">关于</string>
+    <string name="version">版本号</string>
+    <string name="author">作者: VincentTung</string>
+    <string name="main_title">主标题</string>
+    <string name="comment_content">评论内容</string>
+    <string name="comment_date">评论日期</string>
+    <string name="user">用户</string>
+    <string name="up">UP</string>
+    <string name="hot">最热</string>
+    <string name="newest">最新</string>
+    <string name="collect">收藏</string>
+    <string name="no_more_data">没有更多数据了</string>
+    <string name="login_failed">登录失败</string>
+    <string name="please_input">请输入</string>
+    <string name="require_permission_failed">获取定位权限失败</string>
+    <string name="turn_on_failed">开启蓝牙失败</string>
+</resources>
