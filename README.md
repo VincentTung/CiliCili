@@ -148,7 +148,7 @@ CiliCili/
 
 ## 🙏 致谢
 
-- **图标设计**: 感谢 [Morgan](https://github.com/Morgan) 提供的精美图标设计
+- **图标设计**: 感谢 [Morgan]提供的精美图标设计
 
 ---
 
